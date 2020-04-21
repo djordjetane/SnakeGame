@@ -78,7 +78,10 @@ namespace Engine
 
     struct PlayerComponent : public Component
     {
-        float m_PanSpeed = 1.0f;
+        float m_PlayerSpeed = 1.0f;
+
+        PlayerComponent() = default;
+        PlayerComponent(float speed) : m_PlayerSpeed(speed) {};
     };
 
     struct HealthComponent : public Component

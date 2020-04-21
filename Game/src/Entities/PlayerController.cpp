@@ -1,5 +1,6 @@
 #include "precomp.h"
 #include "PlayerController.h"
+#include "GameComponents.h"
 
 namespace Game
 {
@@ -10,17 +11,20 @@ namespace Game
         
         auto player = std::make_unique<Engine::Entity>();
 
-        player->AddComponent<Engine::TransformComponent>(0.f, 0.f, 80.f, 20.f);
-        player->AddComponent<Engine::CollisionComponent>(30.f, 100.f);
-        player->AddComponent<Engine::PlayerComponent>();
+        player->AddComponent<Engine::TransformComponent>(-300.0f, 0.f, 20.f, 20.f);
+        player->AddComponent<Engine::CollisionComponent>(20.f, 20.f);
+        player->AddComponent<Engine::PlayerComponent>(200.f);
         player->AddComponent<Engine::InputComponent>();
         player->AddComponent<Engine::MoverComponent>();
+        player->AddComponent<HeadComponent>(EHeadDirection::Right);
         player->AddComponent<Engine::SpriteComponent>().m_Image = texture_;
 
         auto inputComp = player->GetComponent<Engine::InputComponent>();
 
         inputComp->inputActions.push_back({ fmt::format("Player1MoveUp") });
         inputComp->inputActions.push_back({ fmt::format("Player1MoveDown") });
+        inputComp->inputActions.push_back({ fmt::format("Player1MoveLeft") });
+        inputComp->inputActions.push_back({ fmt::format("Player1MoveRight") });
 
         entityManager_->AddEntity(std::move(player));        
 
@@ -35,14 +39,36 @@ namespace Game
         {
             auto move = entity->GetComponent<Engine::MoverComponent>();
             auto input = entity->GetComponent<Engine::InputComponent>();
-            auto speed = entity->GetComponent<Engine::PlayerComponent>()->m_PanSpeed;
-            auto transform = entity->GetComponent<Engine::TransformComponent>();            
+            auto player = entity->GetComponent<Engine::PlayerComponent>();
+            auto transform = entity->GetComponent<Engine::TransformComponent>();    
+
+            auto speed = player->m_PlayerSpeed;
+            auto direction = entity->GetComponent<HeadComponent>()->m_Direction;
 
             bool moveUpInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveUp"));
             bool moveDownInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveDown"));
+            bool moveLeftInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveLeft"));
+            bool moveRightInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveRight"));
 
-            move->m_TranslationSpeed.y = speed * ((moveUpInput ? -1.0f : 0.0f) + (moveDownInput ? 1.0f : 0.0f));            
-            transform->m_Position.y += move->m_TranslationSpeed.y;            
+            if (moveUpInput && !(direction == EHeadDirection::Down)) {
+                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Up;
+            }
+            else if (moveDownInput && !(direction == EHeadDirection::Up)) {
+                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Down;
+            }
+            else if (moveLeftInput && !(direction == EHeadDirection::Right)) {
+                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Left;
+            }
+            else if (moveRightInput && !(direction == EHeadDirection::Left)) {
+                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
+            }
+
+            direction = entity->GetComponent<HeadComponent>()->m_Direction;
+
+            move->m_TranslationSpeed.x = speed * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
+            move->m_TranslationSpeed.y = speed * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
+
+                        
         }
     }
 }
