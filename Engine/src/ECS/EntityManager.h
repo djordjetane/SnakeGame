@@ -20,7 +20,7 @@ namespace Engine
 
             for (const auto& entity : m_Entities)
             {
-                if (entity->HasComponent<TComponent>())
+                if (entity->HasComponent<TComponent>() && entity->GetComponent<TComponent>()->m_Active)
                 {
                     returnVec.push_back(entity.get());
                 }

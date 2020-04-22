@@ -13,9 +13,10 @@ namespace Game
     public:
         int m_framerate=0;
         float m_passedTime=0.f;
+        std::vector<std::unique_ptr<Engine::Entity>> m_UnusedBodyParts;
 
         bool Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_);
         void Update(float dt, Engine::EntityManager* entityManager_);
-        void ActivateBodyPart(Engine::EntityManager* entityManager_, int index);
+        void ActivateBodyPart(Engine::EntityManager* entityManager_, int index, vec2 position);
     };
 }

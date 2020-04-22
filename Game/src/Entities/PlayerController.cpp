@@ -2,6 +2,7 @@
 #include "PlayerController.h"
 #include "GameComponents.h"
 
+
 namespace Game
 {
     bool PlayerController::Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_)
@@ -9,13 +10,17 @@ namespace Game
         ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to PlayerController::Init()");
         ASSERT(texture_ != nullptr, "Must pass valid pointer to texture to PlayerController::Init()");
 
-        m_framerate = 10;
+        m_framerate = 12;
         m_passedTime;
+
+        auto data = std::make_unique<Engine::Entity>();;
+        data->AddComponent<PositionComponent>();
 
         auto player = std::make_unique<Engine::Entity>();
 
-        player->AddComponent<Engine::TransformComponent>(-300.0f, 0.f, 20.f, 20.f);
-        player->AddComponent<Engine::CollisionComponent>(20.f, 20.f);
+        //initializing heat entity
+        player->AddComponent<Engine::TransformComponent>(-300.f, 20.f, 40.f, 40.f);
+        player->AddComponent<Engine::CollisionComponent>(40.f, 40.f);
         player->AddComponent<Engine::PlayerComponent>(200.f);
         player->AddComponent<Engine::InputComponent>();
         player->AddComponent<Engine::MoverComponent>();
@@ -31,27 +36,29 @@ namespace Game
 
         entityManager_->AddEntity(std::move(player));        
 
-        for (int i = 1; i < 25; i++) {
+        //initializing body part entities
+        for (int i = 1; i < 100; i++) {
         
             player=std::make_unique<Engine::Entity>();
-            player->AddComponent<Engine::TransformComponent>(-300.0f-20.f*i, 0.f, 20.f, 20.f);
-            player->AddComponent<Engine::CollisionComponent>(20.f, 20.f);
+            player->AddComponent<Engine::TransformComponent>(-300.0f-40.f*i, 20.f, 40.f, 40.f);
+            player->AddComponent<Engine::CollisionComponent>(40.f, 40.f);
             player->AddComponent<Engine::PlayerComponent>(200.f);
             player->AddComponent<Engine::MoverComponent>();
             player->AddComponent<BodyComponent>(i);
             player->AddComponent<Engine::SpriteComponent>().m_Image = texture_;
 
-            if (i > 4) {
+            //body parts longer than starting length are deactivated
+            if (i > 3) {
                 player->GetComponent<Engine::SpriteComponent>()->m_Active = false;
+                player->GetComponent<Engine::CollisionComponent>()->m_Active = false;
+                player->GetComponent<Engine::MoverComponent>()->m_Active = false;
+                //m_UnusedBodyParts.push_back(player);
             }
-
-            entityManager_->AddEntity(std::move(player));
+            //else {
+                entityManager_->AddEntity(std::move(player));
+            //}
         
         }
-
-        auto data = std::make_unique<Engine::Entity>();;
-        data->AddComponent<PositionComponent>();
-
         entityManager_->AddEntity(std::move(data));
 
         return !(entityManager_->GetAllEntitiesWithComponent<Engine::PlayerComponent>().empty());
@@ -67,8 +74,9 @@ namespace Game
 
         auto headEntities = entityManager_->GetAllEntitiesWithComponents<Engine::PlayerComponent, Engine::MoverComponent, Engine::InputComponent, Engine::TransformComponent>();
         auto bodyEntities = entityManager_->GetAllEntitiesWithComponents<BodyComponent,Engine::PlayerComponent, Engine::TransformComponent>();
-        auto dataEntities=entityManager_->GetAllEntitiesWithComponent<PositionComponent>();
+        auto dataEntities = entityManager_->GetAllEntitiesWithComponent<PositionComponent>();
 
+        //update head for input and movement
         for (auto& entity : headEntities)
         {
             auto move = entity->GetComponent<Engine::MoverComponent>();
@@ -104,30 +112,53 @@ namespace Game
             }
 
             direction = entity->GetComponent<HeadComponent>()->m_Direction;
+
             //if enough time has passed we can activate the system
             if (m_passedTime > timeTreshold) {
-                move->m_TranslationSpeed.x = 20 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
-                move->m_TranslationSpeed.y = 20 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
-            
+                //Movement
+
+                move->m_TranslationSpeed = { 0.f,0.f };
+
+                // Not to fall out of the window
+                if (transform->m_Position.x < -620.f){
+                    transform->m_Position.x = 620.f;
+                }
+                else if(transform->m_Position.x > 620.f){
+                    transform->m_Position.x = -620.f;
+                }
+                else if (transform->m_Position.y < -340.f){
+                    transform->m_Position.y = 340.f;
+                }
+                else if (transform->m_Position.y > 340.f){
+                    transform->m_Position.y = -340.f;
+                }
+                else {
+                    //update speed
+                    move->m_TranslationSpeed.x = 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
+                    move->m_TranslationSpeed.y = 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
+                }
+
+                //Collision
                 auto collider = entity->GetComponent<Engine::CollisionComponent>();
 
                 for (const auto& entity : collider->m_CollidedWith)
                 {
                     if (entity->HasComponent<FruitComponent>())
                     {
-                        ActivateBodyPart(entityManager_,snakeLength);
                         for (auto& data : dataEntities) {
+                            ActivateBodyPart(entityManager_,snakeLength,data->GetComponent<PositionComponent>()->m_Positions[snakeLength-1]);
                             data->GetComponent<PositionComponent>()->m_CurrentLength = ++snakeLength;
                         }
                     }
                 }
-            
             }
+            //if not just stay in place 
             else {
                 move->m_TranslationSpeed = { 0.f,0.f };
             }
         }
 
+        //save current positions first
         for (auto& entity : bodyEntities) {
             auto index = entity->GetComponent<BodyComponent>()->m_Index;
             auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;
@@ -137,9 +168,9 @@ namespace Game
             }
         }
 
-        //if enough time has passed we can activate the system
-        
+        //update other body parts
         for (auto& entity : bodyEntities) {
+            //if enough time has passed set speed
             if (m_passedTime > timeTreshold) {
                 auto index = entity->GetComponent<BodyComponent>()->m_Index;
                 auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;
@@ -148,6 +179,7 @@ namespace Game
                     entity->GetComponent<Engine::MoverComponent>()->m_TranslationSpeed = data->GetComponent<PositionComponent>()->m_Positions[index - 1] - position;
                 }
             }
+            //if not stay in place
             else {
                 entity->GetComponent<Engine::MoverComponent>()->m_TranslationSpeed = { 0.f,0.f };
             }
@@ -158,13 +190,21 @@ namespace Game
             m_passedTime = 0;
         }
     }
-    void PlayerController::ActivateBodyPart(Engine::EntityManager* entityManager_, int index)
-    {
-        auto bodyPartEntities = entityManager_->GetAllEntitiesWithComponent<BodyComponent>();
-
-        for (auto entity : bodyPartEntities) {
+    void PlayerController::ActivateBodyPart(Engine::EntityManager* entityManager_, int index, vec2 position)
+    {   
+        //auto entity = std::move(m_UnusedBodyParts.back());
+        auto bodyEntities = entityManager_->GetAllEntitiesWithComponent<BodyComponent>();
+        for (auto entity : bodyEntities) {
             if (entity->GetComponent<BodyComponent>()->m_Index == index) {
+                //auto entity = m_UnusedBodyParts.begin();
+                entity->GetComponent<BodyComponent>()->m_Index = index;
                 entity->GetComponent<Engine::SpriteComponent>()->m_Active = true;
+                entity->GetComponent<Engine::CollisionComponent>()->m_Active = true;
+                entity->GetComponent<Engine::TransformComponent>()->m_Active = true;
+                entity->GetComponent<Engine::TransformComponent>()->m_Position = position;
+
+                //entityManager_->AddEntity(std::move(entity));
+                //m_UnusedBodyParts.erase(entity);
             }
         }
     }
