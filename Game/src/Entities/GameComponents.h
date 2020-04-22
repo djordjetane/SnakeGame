@@ -40,7 +40,7 @@ namespace Game
 
     struct SuperFruitComponent : public Engine::Component
     {
-
+        bool m_shown = false;
     };
 
     struct GridComponent : public Engine::Component

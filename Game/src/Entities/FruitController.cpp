@@ -26,6 +26,14 @@ namespace Game {
 
 		entityManager_->AddEntity(std::move(fruit));
 
+		auto superFruit = std::make_unique<Engine::Entity>();
+		superFruit->AddComponent<SuperFruitComponent>();
+		superFruit->AddComponent<Engine::TransformComponent>(9000.f, 9000.f, 32.f, 32.f);
+		superFruit->AddComponent<Engine::CollisionComponent>(32.f, 32.f);
+		superFruit->AddComponent<Engine::SpriteComponent>().m_Image = texture_;
+		
+		entityManager_->AddEntity(std::move(superFruit));
+
 		m_change = 0;
 		m_superChange = 0;
 
@@ -47,11 +55,11 @@ namespace Game {
 			{
 				if (entity->HasComponent<Engine::PlayerComponent>())
 				{
-					m_change = 180;
+					m_change = 361;
 				}
 			}
 
-			if(m_change > 180)
+			if(m_change > 360)
 			{			
 				m_change = 0;
 				int random_x = rand() % 600;
@@ -64,14 +72,10 @@ namespace Game {
 			}			
 		}		
 
-		auto superFruits = entityManager_->GetAllEntitiesWithComponent<SuperFruitComponent>();
+		auto superFruit = entityManager_->GetAllEntitiesWithComponent<SuperFruitComponent>().at(0); // Limited to only one at time
 
-		if (superFruits.empty() && m_superChange > 240)
-		{
-			auto fruit = std::make_unique<Engine::Entity>();
-
-			fruit->AddComponent<SuperFruitComponent>();
-			
+		if (!superFruit->GetComponent<SuperFruitComponent>()->m_shown && m_superChange > 240)
+		{						
 			m_superChange = 0;
 			int random_x = rand() % 600;
 			int random_y = rand() % 350;
@@ -80,23 +84,37 @@ namespace Game {
 			
 			float x = (float)random_x * mlp_x;
 			float y = (float)random_y * mlp_y;
-			fruit->AddComponent<Engine::TransformComponent>(x, y, 32.f, 32.f);
-			fruit->AddComponent<Engine::CollisionComponent>(32.f, 32.f);
-			fruit->AddComponent<Engine::SpriteComponent>().m_Image = m_texture;
 			
+			auto transformator = superFruit->GetComponent<Engine::TransformComponent>();
+			transformator->m_Position.x = x;
+			transformator->m_Position.y = y;
 
-			entityManager_->AddEntity(std::move(fruit));
+			superFruit->GetComponent<SuperFruitComponent>()->m_shown = true;
 		}		
 
-		else if (!superFruits.empty() && m_superChange > 60)
+		else if (superFruit->GetComponent<SuperFruitComponent>()->m_shown)
 		{
+
+			auto collider = superFruit->GetComponent<Engine::CollisionComponent>();
+
+			for (const auto& entity : collider->m_CollidedWith)
+			{
+				if (entity->HasComponent<Engine::PlayerComponent>())
+				{
+					m_superChange = 271;
+				}
+			}
 			
-			superFruits[0]->RemoveComponent<Engine::SpriteComponent>();
-			superFruits[0]->RemoveComponent<Engine::CollisionComponent>();
-			superFruits[0]->RemoveComponent<Engine::TransformComponent>();
-			superFruits[0]->RemoveComponent<SuperFruitComponent>();
-						
-			m_superChange = 0;			
+			if (m_superChange > 270)
+			{
+				auto transformator = superFruit->GetComponent<Engine::TransformComponent>();
+				transformator->m_Position.x = 9000.f;
+				transformator->m_Position.y = 9000.f;
+
+				superFruit->GetComponent<SuperFruitComponent>()->m_shown = false;
+
+				m_superChange = 0;
+			}
 		}
 
 		m_change++;
