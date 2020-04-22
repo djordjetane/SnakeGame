@@ -106,6 +106,22 @@ namespace Game
             direction = entity->GetComponent<HeadComponent>()->m_Direction;
             //if enough time has passed we can activate the system
             if (m_passedTime > timeTreshold) {
+              
+                 // Not to fall out of the window
+                if (transform->m_Position.x <= -640.f){
+                    transform->m_Position.x = 640.f;
+                }
+                else if(transform->m_Position.x >= 640.f){
+                    transform->m_Position.x = -640.f;
+                }
+
+                if (transform->m_Position.y <= -360.f){
+                    transform->m_Position.y = 360.f;
+                }
+                else if (transform->m_Position.y >= 360.f){
+                    transform->m_Position.y = -360.f;
+                }
+              
                 move->m_TranslationSpeed.x = 20 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
                 move->m_TranslationSpeed.y = 20 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
             
@@ -127,7 +143,6 @@ namespace Game
                 move->m_TranslationSpeed = { 0.f,0.f };
             }
         }
-
         for (auto& entity : bodyEntities) {
             auto index = entity->GetComponent<BodyComponent>()->m_Index;
             auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;
