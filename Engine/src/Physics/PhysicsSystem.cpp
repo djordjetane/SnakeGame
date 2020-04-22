@@ -11,41 +11,44 @@ namespace Engine
         bool CheckForCollisionAABoxVsCircle(Entity * entity1, Entity * entity2);
 
     bool PhysicsSystem::Init()
-    {
+    {   
+        
         return true;
     }
 
     void PhysicsSystem::Update(float dt, EntityManager* entityManager)
-    {
-        // Move
-        auto entitiesToMove = entityManager->GetAllEntitiesWithComponents<TransformComponent, MoverComponent>();
+    {   
+        
+            // Move
+            auto entitiesToMove = entityManager->GetAllEntitiesWithComponents<TransformComponent, MoverComponent>();
 
-        for (auto& entity : entitiesToMove)
-        {
-            auto transform = entity->GetComponent<TransformComponent>();
-            auto mover = entity->GetComponent<MoverComponent>();
-
-            transform->m_Position += mover->m_TranslationSpeed * dt;
-            transform->m_Rotation += mover->m_RotationSpeed * dt;
-        }
-
-        // Collide
-        auto entitiesToCollide = entityManager->GetAllEntitiesWithComponents<TransformComponent, CollisionComponent>();
-
-        for (auto& entity : entitiesToCollide) { entity->GetComponent<CollisionComponent>()->m_CollidedWith.clear(); }
-
-        for (auto& entity1 : entitiesToCollide)
-        {
-            for (auto& entity2 : entitiesToCollide)
+            for (auto& entity : entitiesToMove)
             {
-                bool collided = CheckForCollision(entity1, entity2);
+                auto transform = entity->GetComponent<TransformComponent>();
+                auto mover = entity->GetComponent<MoverComponent>();
 
-                if (collided)
+                transform->m_Position += mover->m_TranslationSpeed;
+                transform->m_Rotation += mover->m_RotationSpeed;
+            }
+
+            // Collide
+            auto entitiesToCollide = entityManager->GetAllEntitiesWithComponents<TransformComponent, CollisionComponent>();
+
+            for (auto& entity : entitiesToCollide) { entity->GetComponent<CollisionComponent>()->m_CollidedWith.clear(); }
+
+            for (auto& entity1 : entitiesToCollide)
+            {
+                for (auto& entity2 : entitiesToCollide)
                 {
-                    entity1->GetComponent<CollisionComponent>()->m_CollidedWith.insert(entity2);
+                    bool collided = CheckForCollision(entity1, entity2);
+
+                    if (collided)
+                    {
+                        entity1->GetComponent<CollisionComponent>()->m_CollidedWith.insert(entity2);
+                    }
                 }
             }
-        }
+        
     }
 
     bool CheckForCollision(Entity* entity1, Entity* entity2)

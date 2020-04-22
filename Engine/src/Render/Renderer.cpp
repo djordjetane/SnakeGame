@@ -70,8 +70,11 @@ namespace Engine
     void Renderer::DrawEntities(const std::vector<Entity*> renderables_, const Entity* camera)
     {
         for (const auto r : renderables_)
-        {
-            DrawEntity(r, camera);
+        {   
+            //draw entity only if sprite is active
+            if (r->GetComponent<SpriteComponent>()->m_Active) {
+                DrawEntity(r, camera);
+            }
         }
     }
 
