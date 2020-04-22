@@ -13,7 +13,7 @@ namespace Engine
     {
         Entity* m_Owner{};
         ComponentTypeID m_TypeId{ 0 };
-        bool m_Active{ false };
+        bool m_Active{ true };
         virtual ~Component() = default;
 
     private:
