@@ -68,7 +68,17 @@ namespace Game
             move->m_TranslationSpeed.x = speed * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
             move->m_TranslationSpeed.y = speed * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
 
-                        
+
+            // Not to fall out of the window
+            if (transform->m_Position.x <= -640.f)
+                transform->m_Position.x = 640.f;
+            else if(transform->m_Position.x >= 640.f)
+                transform->m_Position.x = -640.f;
+
+            if (transform->m_Position.y <= -360.f)
+                transform->m_Position.y = 360.f;
+            else if (transform->m_Position.y >= 360.f)
+                transform->m_Position.y = -360.f;
         }
     }
 }
