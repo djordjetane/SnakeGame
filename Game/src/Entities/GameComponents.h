@@ -42,6 +42,16 @@ namespace Game
         bool m_shown = false;
     };
 
+    struct SelectionComponent : public Engine::Component
+    {
+
+    };
+
+    struct MenuComponent : public Engine::Component
+    {
+
+    };
+
     struct GridComponent : public Engine::Component
     {
 

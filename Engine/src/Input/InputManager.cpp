@@ -89,6 +89,7 @@ namespace Engine
         m_InputActions["Player1MoveDown"] = VK_DOWN;
         m_InputActions["Player1MoveRight"] = VK_RIGHT;
         m_InputActions["PauseGame"] = VK_ESCAPE;
+        m_InputActions["Select"] = VK_RETURN;
         m_InputActions["RestartGame"] = 'R';
         m_InputActions["Player2MoveUp"] = 'W';
         m_InputActions["Player2MoveLeft"] = 'A';

@@ -28,7 +28,10 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "grass", "..\\Data\\grass.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "snakeBody", "..\\Data\\snakebody.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit", "..\\Data\\fruit.png");        
-
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "start", "..\\Data\\start.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "quit", "..\\Data\\quit.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "white", "..\\Data\\blank.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "black", "..\\Data\\black.png");
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
     m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"));
@@ -42,14 +45,28 @@ bool Game::GameApp::GameSpecificInit()
     m_PlayerController = std::make_unique<PlayerController>();
     m_PlayerController->Init(m_EntityManager.get(), m_TextureManager->GetTexture("snakeBody"));
 
+
+    //Menu
+    m_Menu = std::make_unique<Menu>();
+    m_Menu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("start"), m_TextureManager->GetTexture("quit"),
+        m_TextureManager->GetTexture("white"), m_TextureManager->GetTexture("black"));
+
     return true;
 }
 
 void Game::GameApp::GameSpecificUpdate(float dt)
 {
-    m_PlayerController->Update(dt, m_EntityManager.get());
-    m_CameraController->Update(dt, m_EntityManager.get());
-    m_FruitController->Update(dt, m_EntityManager.get());
+    if (!m_Menu->is_shown) {
+        m_PlayerController->Update(dt, m_EntityManager.get());
+        m_CameraController->Update(dt, m_EntityManager.get());
+        m_FruitController->Update(dt, m_EntityManager.get());
+    }
+    else {
+        m_Menu->Update(dt, m_EntityManager.get());
+        if (m_Menu->quit) {
+           //TODO
+        }
+    }
 }
 
 bool Game::GameApp::GameSpecificShutdown()
