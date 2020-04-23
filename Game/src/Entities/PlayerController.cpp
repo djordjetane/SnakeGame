@@ -157,7 +157,7 @@ namespace Game
                 move->m_TranslationSpeed = { 0.f,0.f };
             }
         }
-
+      
         //save current positions first
         for (auto& entity : bodyEntities) {
             auto index = entity->GetComponent<BodyComponent>()->m_Index;
