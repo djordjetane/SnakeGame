@@ -24,11 +24,13 @@ namespace Engine
 
             for (auto& entity : entitiesToMove)
             {
-                auto transform = entity->GetComponent<TransformComponent>();
-                auto mover = entity->GetComponent<MoverComponent>();
+                if (entity->GetComponent<MoverComponent>()->m_Active) {
+                    auto transform = entity->GetComponent<TransformComponent>();
+                    auto mover = entity->GetComponent<MoverComponent>();
 
-                transform->m_Position += mover->m_TranslationSpeed;
-                transform->m_Rotation += mover->m_RotationSpeed;
+                    transform->m_Position += mover->m_TranslationSpeed;
+                    transform->m_Rotation += mover->m_RotationSpeed;
+                }
             }
 
             // Collide
@@ -39,12 +41,15 @@ namespace Engine
             for (auto& entity1 : entitiesToCollide)
             {
                 for (auto& entity2 : entitiesToCollide)
-                {
-                    bool collided = CheckForCollision(entity1, entity2);
+                {   
+                    if (entity1->GetComponent<CollisionComponent>()->m_Active && entity2->GetComponent<CollisionComponent>()->m_Active) {
+                        
+                        bool collided = CheckForCollision(entity1, entity2);
 
-                    if (collided)
-                    {
-                        entity1->GetComponent<CollisionComponent>()->m_CollidedWith.insert(entity2);
+                        if (collided)
+                        {
+                            entity1->GetComponent<CollisionComponent>()->m_CollidedWith.insert(entity2);
+                        }
                     }
                 }
             }
