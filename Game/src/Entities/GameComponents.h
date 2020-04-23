@@ -28,9 +28,8 @@ namespace Game
     };
 
     struct PositionComponent : public Engine::Component {
-        vec2 m_Positions[25];
-        int m_CurrentLength=5;
-
+        vec2 m_Positions[100];
+        int m_CurrentLength=3;
     };
 
     struct FruitComponent : public Engine::Component
