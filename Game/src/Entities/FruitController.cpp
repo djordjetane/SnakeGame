@@ -53,9 +53,10 @@ namespace Game {
 
 			for (const auto& entity : collider->m_CollidedWith)
 			{
-				if (entity->HasComponent<Engine::PlayerComponent>())
+				if (entity->HasComponent<HeadComponent>())
 				{
 					m_change = 361;
+					entity->GetComponent<HeadComponent>()->m_HasEatenFruit = true;
 				}
 			}
 
@@ -99,9 +100,10 @@ namespace Game {
 
 			for (const auto& entity : collider->m_CollidedWith)
 			{
-				if (entity->HasComponent<Engine::PlayerComponent>())
+				if (entity->HasComponent<HeadComponent>())
 				{
 					m_superChange = 271;
+					entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = true;
 				}
 			}
 			

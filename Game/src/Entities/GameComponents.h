@@ -15,6 +15,8 @@ namespace Game
     struct HeadComponent : public Engine::Component
     {
         EHeadDirection m_Direction;
+        bool m_HasEatenFruit{false};
+        bool m_HasEatenSuperFruit{false};
 
         HeadComponent() = default;
         HeadComponent(EHeadDirection dir) : m_Direction(dir) {};

@@ -90,7 +90,6 @@ namespace Game
 
             for (auto& data : dataEntities) {
                 data->GetComponent<PositionComponent>()->m_Positions[0] = position;
-                snakeLength = data->GetComponent<PositionComponent>()->m_CurrentLength;
             }
 
             if (moveUpInput && !(direction == EHeadDirection::Down)) {
@@ -114,7 +113,7 @@ namespace Game
                 //Movement
                 move->m_TranslationSpeed = { 0.f,0.f };
 
-                // Not to fall out of the window
+                // Collision/movement with window edges
                 if (transform->m_Position.x < -620.f){
                     transform->m_Position.x = 620.f;
                 }
@@ -134,25 +133,28 @@ namespace Game
                 }
 
                 //Collision
+
+                //if head collided with fruit append it if it collided with superfruit increase speed/framerate
+                if (entity->GetComponent<HeadComponent>()->m_HasEatenFruit) {
+                    AppendSnake(entityManager_, 1);
+                    entity->GetComponent<HeadComponent>()->m_HasEatenFruit = false;
+                }
+                if (entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit) {
+                    m_framerate +=4;
+                    entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = false;
+                }
+    
                 auto collider = entity->GetComponent<Engine::CollisionComponent>();
 
                 for (const auto& entity : collider->m_CollidedWith)
                 {
-                    if (entity->HasComponent<FruitComponent>())
-                    {
-                        //if snake ate fruit append it
-                        for (auto& data : dataEntities) {
-                            ActivateBodyPart(entityManager_,snakeLength,data->GetComponent<PositionComponent>()->m_Positions[snakeLength-1]);
-                            data->GetComponent<PositionComponent>()->m_CurrentLength = ++snakeLength;
-                        }
-                    }
                     //if snake hit itself reset game
                     if (entity->HasComponent<BodyComponent>()) {
                         ResetSnake(entityManager_);
                     }
                 }
             }
-            //if not just stay in place 
+            //if not enough time passed just stay in place 
             else {
                 move->m_TranslationSpeed = { 0.f,0.f };
             }
@@ -200,6 +202,19 @@ namespace Game
             }
         }
     }
+    void PlayerController::AppendSnake(Engine::EntityManager* entityManager_, int length)
+    {
+        auto dataEntities = entityManager_->GetAllEntitiesWithComponent<PositionComponent>();
+
+        //append snake for length num of parts
+        for (auto& data : dataEntities) {
+            auto snakeLength = data->GetComponent<PositionComponent>()->m_CurrentLength;
+            for (int i = 0; i < length; i++) {
+                ActivateBodyPart(entityManager_, snakeLength, data->GetComponent<PositionComponent>()->m_Positions[snakeLength - 1]);
+                data->GetComponent<PositionComponent>()->m_CurrentLength = ++snakeLength;
+            }
+        }
+    }
     void PlayerController::ResetSnake(Engine::EntityManager* entityManager_)
     {
         auto headEntity = entityManager_->GetAllEntitiesWithComponent<HeadComponent>();
@@ -227,5 +242,7 @@ namespace Game
         for (auto data : dataEntity) {
             data->GetComponent<PositionComponent>()->m_CurrentLength = 3;
         }
+
+        m_framerate = 10;
     }
 }

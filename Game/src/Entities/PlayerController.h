@@ -17,6 +17,7 @@ namespace Game
         bool Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_);
         void Update(float dt, Engine::EntityManager* entityManager_);
         void ActivateBodyPart(Engine::EntityManager* entityManager_, int index, vec2 position);
+        void AppendSnake(Engine::EntityManager* entityManager_, int length);
         void ResetSnake(Engine::EntityManager* entityManager_);
     };
 }
