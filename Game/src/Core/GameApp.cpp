@@ -30,8 +30,10 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit", "..\\Data\\fruit.png");        
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "start", "..\\Data\\start.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "quit", "..\\Data\\quit.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume", "..\\Data\\resume.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "white", "..\\Data\\blank.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "black", "..\\Data\\black.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "transparent", "..\\Data\\transparent.png");
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
     m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"));
@@ -46,26 +48,30 @@ bool Game::GameApp::GameSpecificInit()
     m_PlayerController->Init(m_EntityManager.get(), m_TextureManager->GetTexture("snakeBody"));
 
 
-    //Menu
-    m_Menu = std::make_unique<Menu>();
-    m_Menu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("start"), m_TextureManager->GetTexture("quit"),
+    //Main Menu
+    m_MainMenu = std::make_unique<MainMenu>();
+    m_MainMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("start"), m_TextureManager->GetTexture("quit"),
         m_TextureManager->GetTexture("white"), m_TextureManager->GetTexture("black"));
+    //Pause Menu
+    m_PauseMenu = std::make_unique<PauseMenu>();
+    m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("resume"), m_TextureManager->GetTexture("quit"),
+        m_TextureManager->GetTexture("white"), m_TextureManager->GetTexture("transparent"));
 
     return true;
 }
 
 void Game::GameApp::GameSpecificUpdate(float dt)
 {
-    if (!m_Menu->is_shown) {
+    if (m_GameState == Engine::GameState::PlayingLevel) {
         m_PlayerController->Update(dt, m_EntityManager.get());
-        m_CameraController->Update(dt, m_EntityManager.get());
+        m_CameraController->Update(dt, m_EntityManager.get(), &m_GameState);
         m_FruitController->Update(dt, m_EntityManager.get());
     }
+    else if (m_GameState == Engine::GameState::PauseMenu) {
+        m_PauseMenu->Update(dt, m_EntityManager.get(), &m_GameState);
+    }
     else {
-        m_Menu->Update(dt, m_EntityManager.get());
-        if (m_Menu->quit) {
-           //TODO
-        }
+        m_MainMenu->Update(dt, m_EntityManager.get(), &m_GameState);
     }
 }
 

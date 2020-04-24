@@ -163,6 +163,7 @@
     <ClInclude Include="src\Entities\FruitController.h" />
     <ClInclude Include="src\Entities\GameComponents.h" />
     <ClInclude Include="src\Entities\MenuController.h" />
+    <ClInclude Include="src\Entities\PauseMenuController.h" />
     <ClInclude Include="src\Entities\PlayerController.h" />
     <ClInclude Include="src\Entities\StadiumController.h" />
     <ClInclude Include="src\precomp.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="src\Entities\CameraController.cpp" />
     <ClCompile Include="src\Entities\FruitController.cpp" />
     <ClCompile Include="src\Entities\MenuController.cpp" />
+    <ClCompile Include="src\Entities\PauseMenuController.cpp" />
     <ClCompile Include="src\Entities\PlayerController.cpp" />
     <ClCompile Include="src\Entities\StadiumController.cpp" />
     <ClCompile Include="src\precomp.cpp" />

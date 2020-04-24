@@ -47,7 +47,17 @@ namespace Game
 
     };
 
-    struct MenuComponent : public Engine::Component
+    struct MainMenuComponent : public Engine::Component
+    {
+
+    };
+
+    struct PauseMenuComponent : public Engine::Component
+    {
+
+    };
+
+    struct PauseSelectionComponent : public Engine::Component
     {
 
     };

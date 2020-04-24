@@ -16,7 +16,8 @@ namespace Game
         std::unique_ptr<CameraController> m_CameraController{};
         std::unique_ptr<FruitController> m_FruitController{};
         std::unique_ptr<Stadium> m_Stadium{};    
-        std::unique_ptr<Menu> m_Menu{};
+        std::unique_ptr<MainMenu> m_MainMenu{};
+        std::unique_ptr<PauseMenu> m_PauseMenu{};
     };
 
 }

@@ -51,6 +51,8 @@ namespace Engine {
             return false;
         }
 
+        m_GameState = GameState::MainMenu;
+
         // Physics system initialize
         m_PhysicsSystem = std::make_unique<PhysicsSystem>();
         if (!m_PhysicsSystem->Init())
@@ -105,6 +107,10 @@ namespace Engine {
             Update(deltaTime);
 
             previousFrameTime = frameTime;
+
+            if (m_GameState == GameState::QuitGame) {
+                m_Running = false;
+            }
         }
 
         m_Running = false;

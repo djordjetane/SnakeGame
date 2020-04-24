@@ -10,6 +10,16 @@ namespace Engine {
     class EntityManager;
     class TextureManager;
 
+    enum class GameState {
+        MainMenu,
+        PlayingLevel,
+        RestartingLevel,
+        LevelWon,
+        LevelLost,
+        PauseMenu,
+        QuitGame
+    };
+
     class Application
     {
     public:
@@ -31,6 +41,7 @@ namespace Engine {
         std::unique_ptr<InputManager> m_InputManager{};
         std::unique_ptr<EntityManager> m_EntityManager{};
         std::unique_ptr<TextureManager> m_TextureManager{};
+        GameState m_GameState{};
 
     private:
         // To be overridden by the game

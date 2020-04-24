@@ -1,25 +1,25 @@
 #include "precomp.h"
-#include "MenuController.h"
+#include "PauseMenuController.h"
 #include "GameComponents.h"
 
 namespace Game
 {
-    bool MainMenu::Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_1, 
+    bool PauseMenu::Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_1,
         Engine::Texture* texture_2, Engine::Texture* texture_3, Engine::Texture* texture_4)
     {
         ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to Menu::Init()");
 
         auto background = std::make_unique<Engine::Entity>();
-        background->AddComponent<Engine::TransformComponent>(0.f, 0.f, 1280.f, 740.f);
+        background->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1280.f, 740.f);
         background->AddComponent<Engine::SpriteComponent>().m_Image = texture_4;
-        background->AddComponent<MainMenuComponent>();
+        background->AddComponent<PauseMenuComponent>();
         entityManager_->AddEntity(std::move(background));
 
         auto selectionSquare = std::make_unique<Engine::Entity>();
-        selectionSquare->AddComponent<Engine::TransformComponent>(0.f, -100.f, 290.f, 80.f);
+        selectionSquare->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 290.f, 80.f);
         selectionSquare->AddComponent<Engine::SpriteComponent>().m_Image = texture_3;
         selectionSquare->AddComponent<Engine::InputComponent>();
-        selectionSquare->AddComponent<SelectionComponent>();
+        selectionSquare->AddComponent<PauseSelectionComponent>();
         auto input = selectionSquare->GetComponent<Engine::InputComponent>();
 
         input->inputActions.push_back({ fmt::format("Player1MoveUp") });
@@ -28,25 +28,25 @@ namespace Game
         entityManager_->AddEntity(std::move(selectionSquare));
 
         auto menuItem1 = std::make_unique<Engine::Entity>();
-        menuItem1->AddComponent<Engine::TransformComponent>(0.f, -100.f, 300.f, 95.f);
+        menuItem1->AddComponent<Engine::TransformComponent>(0.f, 8900.f, 300.f, 95.f);
         menuItem1->AddComponent<Engine::SpriteComponent>().m_Image = texture_1;
-        menuItem1->AddComponent<MainMenuComponent>();
+        menuItem1->AddComponent<PauseMenuComponent>();
         entityManager_->AddEntity(std::move(menuItem1));
 
         auto menuItem2 = std::make_unique<Engine::Entity>();
-        menuItem2->AddComponent<Engine::TransformComponent>(0.f, 100.f, 300.f, 95.f);
+        menuItem2->AddComponent<Engine::TransformComponent>(0.f, 9100.f, 300.f, 95.f);
         menuItem2->AddComponent<Engine::SpriteComponent>().m_Image = texture_2;
-        menuItem2->AddComponent<MainMenuComponent>();
+        menuItem2->AddComponent<PauseMenuComponent>();
         entityManager_->AddEntity(std::move(menuItem2));
 
-       
+
         return true;
     }
 
-    void MainMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState)
+    void PauseMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState)
     {
-        auto selectionBox = entityManager_->GetAllEntitiesWithComponents<SelectionComponent, Engine::InputComponent, Engine::TransformComponent>();
-        auto menuStuff = entityManager_->GetAllEntitiesWithComponents<MainMenuComponent, Engine::TransformComponent>();
+        auto selectionBox = entityManager_->GetAllEntitiesWithComponents<PauseSelectionComponent, Engine::InputComponent, Engine::TransformComponent>();
+        auto menuStuff = entityManager_->GetAllEntitiesWithComponents<PauseMenuComponent, Engine::TransformComponent>();
         for (auto& entity : selectionBox)
         {
             auto input = entity->GetComponent<Engine::InputComponent>();
@@ -55,31 +55,43 @@ namespace Game
             bool moveUpInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveUp"));
             bool moveDownInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveDown"));
             bool select = Engine::InputManager::IsActionActive(input, fmt::format("Select"));
-            
+
+            if (transform->m_Position.y == 9000.f && *gameState == Engine::GameState::PauseMenu) {
+                transform->m_Position.y = -100.f;
+            }
+
             if (select) {
                 if (transform->m_Position.y == -100.f) {
                     *gameState = Engine::GameState::PlayingLevel;
-                    entity->RemoveAllComponents();
+                    transform->m_Position.y = 9000.f;
                 }
                 else {
                     *gameState = Engine::GameState::QuitGame;
                 }
             }
-            
+
             if (moveUpInput) {
-                transform->m_Position.y= -100.f;
+                transform->m_Position.y = -100.f;
             }
             else if (moveDownInput) {
                 transform->m_Position.y = 100.f;
             }
-            
+
         }
-        if (*gameState == Engine::GameState::PlayingLevel) {
-            for (auto& entity : menuStuff)
-            {
-                auto transform = entity->GetComponent<Engine::TransformComponent>();
-                entity->RemoveAllComponents();
+        
+        for (auto& entity : menuStuff)
+        {
+
+            auto transform = entity->GetComponent<Engine::TransformComponent>();
+
+            if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::PauseMenu) {
+                transform->m_Position.y = transform->m_Position.y - 9000.f;
+            }
+
+            if (*gameState == Engine::GameState::PlayingLevel) {
+                transform->m_Position.y = transform->m_Position.y+9000.f;
             }
         }
+        
     }
 }

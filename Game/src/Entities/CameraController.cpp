@@ -24,13 +24,14 @@ namespace Game
         inputComp->inputActions.push_back({ "PanCameraDown" });
         inputComp->inputActions.push_back({ "PanCameraRight" });
         inputComp->inputActions.push_back({ "PanCameraLeft" });
+        inputComp->inputActions.push_back({ "PauseGame" });
 
         entityManager_->AddEntity(std::move(camera));
 
         return !(entityManager_->GetAllEntitiesWithComponent<Engine::CameraComponent>().empty());
     }
 
-    void CameraController::Update(float dt, Engine::EntityManager* entityManager_)
+    void CameraController::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState)
     {
         auto entitiesToMove = entityManager_->GetAllEntitiesWithComponents<Engine::CameraComponent, Engine::MoverComponent, Engine::InputComponent>();
 
@@ -44,9 +45,13 @@ namespace Game
             bool moveDownInput = Engine::InputManager::IsActionActive(input, "PanCameraDown");
             bool moveLeftInput = Engine::InputManager::IsActionActive(input, "PanCameraLeft");
             bool moveRightInput = Engine::InputManager::IsActionActive(input, "PanCameraRight");
-
+            bool pauseGameInput = Engine::InputManager::IsActionActive(input, "PauseGame");
             move->m_TranslationSpeed.x = speed * ((moveLeftInput ? -1.0f : 0.0f) + (moveRightInput ? 1.0f : 0.0f));
             move->m_TranslationSpeed.y = speed * ((moveUpInput ? -1.0f : 0.0f) + (moveDownInput ? 1.0f : 0.0f));
+
+            if (pauseGameInput) {
+                *gameState = Engine::GameState::PauseMenu;
+            }
         }
     }
 }
