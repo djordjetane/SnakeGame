@@ -58,7 +58,7 @@ bool Game::GameApp::GameSpecificInit()
     m_FruitController->Init(m_EntityManager.get(), fruitTextures);
 
     // Lvl init TEST: WILL BE MOVED TO GameSpecificUpdate
-    // m_Stadium->InitLvl1(m_EntityManager.get());
+    m_Stadium->InitLvl1(m_EntityManager.get());
 
     // Player
     m_PlayerController = std::make_unique<PlayerController>();
