@@ -5,6 +5,9 @@ namespace Game
     class Stadium
     {
     public:
-        bool Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_);
+        bool Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_, Engine::Texture* textureWall_);
+        bool InitLvlCpp(Engine::EntityManager* entityManager_);
+    private:
+        Engine::Texture* m_textureWall;
     };
 }
