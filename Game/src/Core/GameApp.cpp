@@ -27,13 +27,27 @@ bool Game::GameApp::GameSpecificInit()
     // TestImage
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "grass", "..\\Data\\grass.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "snakeBody", "..\\Data\\snakebody.png");
-    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit", "..\\Data\\fruit.png");        
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "red", "..\\Data\\red.png");        
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "start", "..\\Data\\start.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "quit", "..\\Data\\quit.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume", "..\\Data\\resume.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "white", "..\\Data\\blank.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "black", "..\\Data\\black.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "transparent", "..\\Data\\transparent.png");
+
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit1", "..\\Data\\fruit1.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit2", "..\\Data\\fruit2.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit3", "..\\Data\\fruit3.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit4", "..\\Data\\fruit4.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit5", "..\\Data\\fruit5.png");
+
+    std::vector<Engine::Texture*> fruitTextures{};
+    fruitTextures.push_back(m_TextureManager->GetTexture("fruit1"));
+    fruitTextures.push_back(m_TextureManager->GetTexture("fruit2"));
+    fruitTextures.push_back(m_TextureManager->GetTexture("fruit3"));
+    fruitTextures.push_back(m_TextureManager->GetTexture("fruit4"));
+    fruitTextures.push_back(m_TextureManager->GetTexture("fruit5"));
+    
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
     m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("black"));
@@ -41,7 +55,7 @@ bool Game::GameApp::GameSpecificInit()
 
     // Fruit 
     m_FruitController = std::make_unique<FruitController>(); // Importaint to be after Stadium to be drawn over it
-    m_FruitController->Init(m_EntityManager.get(), m_TextureManager->GetTexture("fruit"));
+    m_FruitController->Init(m_EntityManager.get(), fruitTextures);
 
     // Player
     m_PlayerController = std::make_unique<PlayerController>();
