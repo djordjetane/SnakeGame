@@ -57,8 +57,8 @@ bool Game::GameApp::GameSpecificInit()
     m_FruitController = std::make_unique<FruitController>(); // Importaint to be after Stadium to be drawn over it
     m_FruitController->Init(m_EntityManager.get(), fruitTextures);
 
-    // Lvl init
-    m_Stadium->InitLvl1(m_EntityManager.get());
+    // Lvl init TEST: WILL BE MOVED TO GameSpecificUpdate
+    // m_Stadium->InitLvl1(m_EntityManager.get());
 
     // Player
     m_PlayerController = std::make_unique<PlayerController>();
