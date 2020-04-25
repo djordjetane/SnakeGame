@@ -73,4 +73,9 @@ namespace Game
     {
 
     };
+
+    struct WallComponent : public Engine::Component
+    {
+
+    };
 }
