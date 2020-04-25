@@ -69,5 +69,7 @@ namespace Game
         wall->AddComponent<Engine::CollisionComponent>(200.f, 100.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
+
+        return true;
     }
 }
