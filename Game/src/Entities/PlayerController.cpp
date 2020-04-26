@@ -56,6 +56,13 @@ namespace Game
         }
         entityManager_->AddEntity(std::move(data));
 
+        // *** Helper Component ***
+        auto tmpEntity = std::make_unique<Engine::Entity>();
+        tmpEntity->AddComponent<HelperComponent>();
+        tmpEntity->AddComponent<Engine::TransformComponent>(-300.f, 20.f, 40.f, 40.f);
+        tmpEntity->AddComponent<Engine::CollisionComponent>(38.f, 38.f);
+        entityManager_->AddEntity(std::move(tmpEntity));
+
         return !(entityManager_->GetAllEntitiesWithComponent<Engine::PlayerComponent>().empty());
     }
 
@@ -158,25 +165,61 @@ namespace Game
                     //================================================//
                     if (entityCollided->HasComponent<BumperComponent>())
                     {                         
+                        
+                        auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;                                 
+                        auto helpEntity = entityManager_->GetAllEntitiesWithComponent<HelperComponent>()[0];
+
+                        auto transform = helpEntity->GetComponent<Engine::TransformComponent>();
+                        transform->m_Position = position;
+                        auto collider = helpEntity->GetComponent<Engine::CollisionComponent>();
+
                         switch (direction)
                         {
                         case EHeadDirection::Left:
+                            transform->m_Position.y += 40.f;
                             direction = EHeadDirection::Down;
+                            for (const auto& collision : collider->m_CollidedWith)
+                            {                                
+                                if (collision->HasComponent<BumperComponent>())
+                                    direction = EHeadDirection::Up;
+                            }                            
                             break;
-                        case EHeadDirection::Right:
-                            direction = EHeadDirection::Up;
+
+                        case EHeadDirection::Right:                            
+                            transform->m_Position.y += 40.f;
+                            direction = EHeadDirection::Down;
+                            for (const auto& collision : collider->m_CollidedWith)
+                            {                                                                
+                                if (collision->HasComponent<BumperComponent>())
+                                    direction = EHeadDirection::Up;
+                            }                            
                             break;
+
                         case EHeadDirection::Up:
+                            transform->m_Position.x += 40.f;
                             direction = EHeadDirection::Right;
+                            for (const auto& collision : collider->m_CollidedWith)
+                            {                                
+                                if (collision->HasComponent<BumperComponent>())
+                                    direction = EHeadDirection::Left;
+                            }
                             break;
+
                         case EHeadDirection::Down:
-                            direction = EHeadDirection::Left;
+                            transform->m_Position.x += 40.f;
+                            direction = EHeadDirection::Right;
+                            for (const auto& collision : collider->m_CollidedWith)
+                            {                                
+                                if (collision->HasComponent<BumperComponent>())
+                                    direction = EHeadDirection::Left;
+                            }
                             break;
+
                         default:
                             break;
                         }
 
-                        entity->GetComponent<HeadComponent>()->m_Direction = direction;
+                        entity->GetComponent<HeadComponent>()->m_Direction = direction;                        
                     }
                     //================================================//
                 }

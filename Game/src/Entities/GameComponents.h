@@ -78,4 +78,9 @@ namespace Game
     {
 
     };
+
+    struct HelperComponent : public Engine::Component
+    {
+
+    };
 }
