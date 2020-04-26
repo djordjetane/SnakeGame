@@ -146,12 +146,39 @@ namespace Game
     
                 auto collider = entity->GetComponent<Engine::CollisionComponent>();
 
-                for (const auto& entity : collider->m_CollidedWith)
+                for (const auto& entityCollided : collider->m_CollidedWith)
                 {
                     //if snake hit itself reset game
-                    if (entity->HasComponent<BodyComponent>()) {
+                    if (entityCollided->HasComponent<BodyComponent>()) {
                         ResetSnake(entityManager_);
                     }
+
+                    //================================================//
+                    // Collision with Walls
+                    //================================================//
+                    if (entityCollided->HasComponent<WallComponent>())
+                    {                         
+                        switch (direction)
+                        {
+                        case EHeadDirection::Left:
+                            direction = EHeadDirection::Down;
+                            break;
+                        case EHeadDirection::Right:
+                            direction = EHeadDirection::Up;
+                            break;
+                        case EHeadDirection::Up:
+                            direction = EHeadDirection::Right;
+                            break;
+                        case EHeadDirection::Down:
+                            direction = EHeadDirection::Left;
+                            break;
+                        default:
+                            break;
+                        }
+
+                        entity->GetComponent<HeadComponent>()->m_Direction = direction;
+                    }
+                    //================================================//
                 }
             }
             //if not enough time passed just stay in place 
