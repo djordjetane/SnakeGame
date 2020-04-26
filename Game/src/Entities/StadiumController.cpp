@@ -25,21 +25,21 @@ namespace Game
         // C
         // Vertical
         auto wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
+        wall->AddComponent<BumperComponent>();
         wall->AddComponent<Engine::TransformComponent>(-450.f, 0.f, 100.f, 500.f);
         wall->AddComponent<Engine::CollisionComponent>(100.f, 500.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // C Up horizontal
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
+        wall->AddComponent<BumperComponent>();
         wall->AddComponent<Engine::TransformComponent>(-300.f, -200.f, 200.f, 100.f);
         wall->AddComponent<Engine::CollisionComponent>(200.f, 100.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // C Up horizontal
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
+        wall->AddComponent<BumperComponent>();
         wall->AddComponent<Engine::TransformComponent>(-300.f, 200.f, 200.f, 100.f);
         wall->AddComponent<Engine::CollisionComponent>(200.f, 100.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
@@ -48,14 +48,14 @@ namespace Game
         // First plus
         // horizontal
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
+        wall->AddComponent<BumperComponent>();
         wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 100.f, 200.f);
         wall->AddComponent<Engine::CollisionComponent>(100.f, 200.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // vertical
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
+        wall->AddComponent<BumperComponent>();
         wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 200.f, 100.f);
         wall->AddComponent<Engine::CollisionComponent>(200.f, 100.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
@@ -64,14 +64,14 @@ namespace Game
         // Second plus
         // horizontal
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
+        wall->AddComponent<BumperComponent>();
         wall->AddComponent<Engine::TransformComponent>(300.f, 0.f, 100.f, 200.f);
         wall->AddComponent<Engine::CollisionComponent>(100.f, 200.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // vertical
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
+        wall->AddComponent<BumperComponent>();
         wall->AddComponent<Engine::TransformComponent>(300.f, 0.f, 200.f, 100.f);
         wall->AddComponent<Engine::CollisionComponent>(200.f, 100.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
@@ -85,48 +85,48 @@ namespace Game
         // Central cross
         // horizontal        
         auto wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
-        wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 200.f, 200.f);
-        wall->AddComponent<Engine::CollisionComponent>(200.f, 200.f);
+        wall->AddComponent<BumperComponent>();
+        wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 200.f, 240.f);
+        wall->AddComponent<Engine::CollisionComponent>(200.f, 240.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // vertical
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
-        wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 400.f, 100.f);
-        wall->AddComponent<Engine::CollisionComponent>(400.f, 100.f);
+        wall->AddComponent<BumperComponent>();
+        wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 400.f, 160.f);
+        wall->AddComponent<Engine::CollisionComponent>(400.f, 160.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
 
         // LeftUp bumper
         // vertical
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
-        wall->AddComponent<Engine::TransformComponent>(-530.f, -240.f, 80.f, 150.f);
-        wall->AddComponent<Engine::CollisionComponent>(80.f, 150.f);
+        wall->AddComponent<BumperComponent>();
+        wall->AddComponent<Engine::TransformComponent>(-560.f, -240.f, 80.f, 160.f);
+        wall->AddComponent<Engine::CollisionComponent>(80.f, 160.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // horizontal
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
-        wall->AddComponent<Engine::TransformComponent>(-455.f, -275.f, 70.f, 80.f);
-        wall->AddComponent<Engine::CollisionComponent>(70.f, 80.f);
+        wall->AddComponent<BumperComponent>();
+        wall->AddComponent<Engine::TransformComponent>(-480.f, -280.f, 80.f, 80.f);
+        wall->AddComponent<Engine::CollisionComponent>(80.f, 80.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
 
         // RightDown bumper
         // vertical
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
-        wall->AddComponent<Engine::TransformComponent>(530.f, 240.f, 80.f, 150.f);
-        wall->AddComponent<Engine::CollisionComponent>(80.f, 150.f);
+        wall->AddComponent<BumperComponent>();
+        wall->AddComponent<Engine::TransformComponent>(560.f, 240.f, 80.f, 160.f);
+        wall->AddComponent<Engine::CollisionComponent>(80.f, 160.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // horizontal
         wall = std::make_unique<Engine::Entity>();
-        wall->AddComponent<WallComponent>();
-        wall->AddComponent<Engine::TransformComponent>(455.f, 275.f, 70.f, 80.f);
-        wall->AddComponent<Engine::CollisionComponent>(70.f, 80.f);
+        wall->AddComponent<BumperComponent>();
+        wall->AddComponent<Engine::TransformComponent>(480.f, 280.f, 80.f, 80.f);
+        wall->AddComponent<Engine::CollisionComponent>(80.f, 80.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         return true;

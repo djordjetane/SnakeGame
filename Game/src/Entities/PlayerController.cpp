@@ -156,7 +156,7 @@ namespace Game
                     //================================================//
                     // Collision with Walls
                     //================================================//
-                    if (entityCollided->HasComponent<WallComponent>())
+                    if (entityCollided->HasComponent<BumperComponent>())
                     {                         
                         switch (direction)
                         {

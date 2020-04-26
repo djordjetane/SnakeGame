@@ -85,7 +85,7 @@ namespace Game {
 					fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
 				}
 
-				if (entity->GetComponent<WallComponent>())
+				if (entity->GetComponent<BumperComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = fruit->GetComponent<Engine::TransformComponent>();
@@ -124,7 +124,7 @@ namespace Game {
 					entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = true;
 				}
 
-				if (entity->GetComponent<WallComponent>())
+				if (entity->GetComponent<BumperComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = superFruit->GetComponent<Engine::TransformComponent>();

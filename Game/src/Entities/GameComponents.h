@@ -74,7 +74,7 @@ namespace Game
 
     };
 
-    struct WallComponent : public Engine::Component
+    struct BumperComponent : public Engine::Component
     {
 
     };
