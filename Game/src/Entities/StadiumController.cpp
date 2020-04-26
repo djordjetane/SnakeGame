@@ -12,7 +12,7 @@ namespace Game
         m_textureWall = textureWall_;
 
         auto grid = std::make_unique<Engine::Entity>(); 
-        grid->AddComponent<Engine::TransformComponent>(0.f, 0.f, 1280.f, 736.f);
+        grid->AddComponent<Engine::TransformComponent>(0.f, 0.f, 1280.f, 720.f);
         grid->AddComponent<Engine::SpriteComponent>().m_Image = texture_;
 
         entityManager_->AddEntity(std::move(grid));        
