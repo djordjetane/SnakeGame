@@ -176,7 +176,7 @@ namespace Game
                         switch (direction)
                         {
                         case EHeadDirection::Left:
-                            transform->m_Position.y += 40.f;
+                            transform->m_Position.y = position.y < 0 ? position.y + 40.f : position.y - 40.f;
                             direction = EHeadDirection::Down;
                             for (const auto& collision : collider->m_CollidedWith)
                             {                                
@@ -186,7 +186,7 @@ namespace Game
                             break;
 
                         case EHeadDirection::Right:                            
-                            transform->m_Position.y += 40.f;
+                            transform->m_Position.y = position.y < 0 ? position.y + 40.f : position.y - 40.f;
                             direction = EHeadDirection::Down;
                             for (const auto& collision : collider->m_CollidedWith)
                             {                                                                
@@ -196,7 +196,7 @@ namespace Game
                             break;
 
                         case EHeadDirection::Up:
-                            transform->m_Position.x += 40.f;
+                            transform->m_Position.x = position.x < 0 ? position.x + 40.f : position.x - 40.f;
                             direction = EHeadDirection::Right;
                             for (const auto& collision : collider->m_CollidedWith)
                             {                                
@@ -206,7 +206,7 @@ namespace Game
                             break;
 
                         case EHeadDirection::Down:
-                            transform->m_Position.x += 40.f;
+                            transform->m_Position.x = position.x < 0 ? position.x + 40.f : position.x - 40.f;
                             direction = EHeadDirection::Right;
                             for (const auto& collision : collider->m_CollidedWith)
                             {                                
