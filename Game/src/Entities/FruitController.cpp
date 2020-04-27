@@ -7,13 +7,13 @@ namespace Game {
 	
 	std::pair<float, float> GetRandomPosition()
 	{
-		int random_x = rand() % 600;
-		int random_y = rand() % 350;
+		int random_x = rand() % 16;
+		int random_y = rand() % 9;
 		int mlp_x = rand() % 2 ? 1 : -1;
 		int mlp_y = rand() % 2 ? 1 : -1;
 
-		float x = random_x * mlp_x;
-		float y = random_y * mlp_y;
+		float x = random_x * mlp_x * 40;
+		float y = random_y * mlp_y * 40;
 
 		return { x, y };
 	}
@@ -85,7 +85,7 @@ namespace Game {
 					fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
 				}
 
-				if (entity->GetComponent<BumperComponent>())
+				if (entity->HasComponent<BumperComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = fruit->GetComponent<Engine::TransformComponent>();
@@ -124,7 +124,7 @@ namespace Game {
 					entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = true;
 				}
 
-				if (entity->GetComponent<BumperComponent>())
+				if (entity->HasComponent<BumperComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = superFruit->GetComponent<Engine::TransformComponent>();

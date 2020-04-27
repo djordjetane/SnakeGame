@@ -131,4 +131,37 @@ namespace Game
         entityManager_->AddEntity(std::move(wall));
         return true;
     }
+
+    bool Stadium::InitLvl2(Engine::EntityManager* entityManager_)
+    {
+        // Bumper Down
+        auto bumper = std::make_unique<Engine::Entity>();
+        bumper->AddComponent<Engine::TransformComponent>(0.f, 240.f, 240.f, 80.f);
+        bumper->AddComponent<Engine::CollisionComponent>(240.f, 80.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
+        entityManager_->AddEntity(std::move(bumper));
+
+        // Bumper Up
+        bumper = std::make_unique<Engine::Entity>();
+        bumper->AddComponent<Engine::TransformComponent>(0.f, -240.f, 240.f, 80.f);
+        bumper->AddComponent<Engine::CollisionComponent>(240.f, 80.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
+        entityManager_->AddEntity(std::move(bumper));
+
+        // Bumper Left
+        bumper = std::make_unique<Engine::Entity>();
+        bumper->AddComponent<Engine::TransformComponent>(-240.f, 0.f, 80.f, 240.f);
+        bumper->AddComponent<Engine::CollisionComponent>(80.f, 240.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
+        entityManager_->AddEntity(std::move(bumper));
+
+        // Bumper right
+        bumper = std::make_unique<Engine::Entity>();
+        bumper->AddComponent<Engine::TransformComponent>(240.f, 0.f, 80.f, 240.f);
+        bumper->AddComponent<Engine::CollisionComponent>(80.f, 240.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
+        entityManager_->AddEntity(std::move(bumper));
+
+        return true;
+    }
 }

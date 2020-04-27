@@ -169,20 +169,20 @@ namespace Game
                         auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;                                 
                         auto helpEntity = entityManager_->GetAllEntitiesWithComponent<HelperComponent>()[0];
 
-                        auto transform = helpEntity->GetComponent<Engine::TransformComponent>();
-                        transform->m_Position = position;
-                        auto collider = helpEntity->GetComponent<Engine::CollisionComponent>();
+                        auto helperTransform = helpEntity->GetComponent<Engine::TransformComponent>();
+                        helperTransform->m_Position = position;
+                        auto helperCollider = helpEntity->GetComponent<Engine::CollisionComponent>();
 
-                        float x, y;
+                        float x, y; // Coordinates of snake head
 
                         switch (direction)
                         {
                         case EHeadDirection::Left:
-                            y = transform->m_Position.y;
-                            transform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
-                            direction = y < transform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
+                            y = helperTransform->m_Position.y;
+                            helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
+                            direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
 
-                            for (const auto& collision : collider->m_CollidedWith)
+                            for (const auto& collision : helperCollider->m_CollidedWith)
                             {                                
                                 if (collision->HasComponent<BumperComponent>())
                                 {
@@ -195,11 +195,11 @@ namespace Game
                             break;
 
                         case EHeadDirection::Right:                            
-                            y = transform->m_Position.y;
-                            transform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
-                            direction = y < transform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
+                            y = helperTransform->m_Position.y;
+                            helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
+                            direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
 
-                            for (const auto& collision : collider->m_CollidedWith)
+                            for (const auto& collision : helperCollider->m_CollidedWith)
                             {
                                 if (collision->HasComponent<BumperComponent>())
                                 {
@@ -212,11 +212,11 @@ namespace Game
                             break;
 
                         case EHeadDirection::Up:
-                            x = transform->m_Position.x;
-                            transform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
-                            direction = x < transform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
+                            x = helperTransform->m_Position.x;
+                            helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
+                            direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
 
-                            for (const auto& collision : collider->m_CollidedWith)
+                            for (const auto& collision : helperCollider->m_CollidedWith)
                             {
                                 if (collision->HasComponent<BumperComponent>())
                                 {
@@ -229,11 +229,11 @@ namespace Game
                             break;
 
                         case EHeadDirection::Down:
-                            x = transform->m_Position.x;
-                            transform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
-                            direction = x < transform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
+                            x = helperTransform->m_Position.x;
+                            helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
+                            direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
 
-                            for (const auto& collision : collider->m_CollidedWith)
+                            for (const auto& collision : helperCollider->m_CollidedWith)
                             {
                                 if (collision->HasComponent<BumperComponent>())
                                 {
