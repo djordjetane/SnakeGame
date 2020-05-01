@@ -10,6 +10,6 @@ namespace Game
         bool InitLvl1(Engine::EntityManager* entityManager_);
         bool InitLvl2(Engine::EntityManager* entityManager_);
     private:
-        Engine::Texture* m_textureWall;
+        Engine::Texture* m_textureBumper;
     };
 }

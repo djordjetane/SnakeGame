@@ -1,5 +1,4 @@
 #include "precomp.h"
-
 #include "CameraController.h"
 
 namespace Game
@@ -12,18 +11,13 @@ namespace Game
         auto camera = std::make_unique<Engine::Entity>();
         camera->AddComponent<Engine::TransformComponent>();
         camera->AddComponent<Engine::CameraComponent>(100.f);
-        camera->AddComponent<Engine::InputComponent>();
-        camera->AddComponent<Engine::MoverComponent>();
+        camera->AddComponent<Engine::InputComponent>();        
 
         auto transformComp = camera->GetComponent<Engine::TransformComponent>();
         transformComp->m_Size = { 1280.f, 720.f };
 
         auto inputComp = camera->GetComponent<Engine::InputComponent>();
 
-        inputComp->inputActions.push_back({ "PanCameraUp" });
-        inputComp->inputActions.push_back({ "PanCameraDown" });
-        inputComp->inputActions.push_back({ "PanCameraRight" });
-        inputComp->inputActions.push_back({ "PanCameraLeft" });
         inputComp->inputActions.push_back({ "PauseGame" });
 
         entityManager_->AddEntity(std::move(camera));
@@ -33,25 +27,14 @@ namespace Game
 
     void CameraController::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState)
     {
-        auto entitiesToMove = entityManager_->GetAllEntitiesWithComponents<Engine::CameraComponent, Engine::MoverComponent, Engine::InputComponent>();
+        auto camera = entityManager_->GetAllEntitiesWithComponent<Engine::CameraComponent>()[0]; // Only one camera        
+        auto input = camera->GetComponent<Engine::InputComponent>();
 
-        for (auto& entity : entitiesToMove)
+        bool pauseGameInput = Engine::InputManager::IsActionActive(input, "PauseGame");            
+
+        if (pauseGameInput) 
         {
-            auto move = entity->GetComponent<Engine::MoverComponent>();
-            auto input = entity->GetComponent<Engine::InputComponent>();
-            auto speed = entity->GetComponent<Engine::CameraComponent>()->m_PanSpeed;
-
-            bool moveUpInput = Engine::InputManager::IsActionActive(input, "PanCameraUp");
-            bool moveDownInput = Engine::InputManager::IsActionActive(input, "PanCameraDown");
-            bool moveLeftInput = Engine::InputManager::IsActionActive(input, "PanCameraLeft");
-            bool moveRightInput = Engine::InputManager::IsActionActive(input, "PanCameraRight");
-            bool pauseGameInput = Engine::InputManager::IsActionActive(input, "PauseGame");
-            move->m_TranslationSpeed.x = speed * ((moveLeftInput ? -1.0f : 0.0f) + (moveRightInput ? 1.0f : 0.0f));
-            move->m_TranslationSpeed.y = speed * ((moveUpInput ? -1.0f : 0.0f) + (moveDownInput ? 1.0f : 0.0f));
-
-            if (pauseGameInput) {
-                *gameState = Engine::GameState::PauseMenu;
-            }
-        }
+            *gameState = Engine::GameState::PauseMenu;
+        }       
     }
 }

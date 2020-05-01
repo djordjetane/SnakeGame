@@ -18,6 +18,9 @@ namespace Game {
 		return { x, y };
 	}
 	
+	// *********************************
+	// * Initializing fruit controller *
+	// *********************************
 	bool FruitController::Init(Engine::EntityManager* entityManager_, std::vector<Engine::Texture*>& textures_)
 	{
 		ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to FruitController::Init()");
@@ -62,6 +65,9 @@ namespace Game {
 		return true;
 	}
 
+	// ********************************
+	// * Updating state for new frame *
+	// ********************************
 	void FruitController::Update(float dt, Engine::EntityManager* entityManager_)
 	{
 
@@ -85,7 +91,7 @@ namespace Game {
 					fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
 				}
 
-				if (entity->HasComponent<BumperComponent>())
+				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = fruit->GetComponent<Engine::TransformComponent>();
@@ -95,8 +101,12 @@ namespace Game {
 			}					
 		}		
 
-		auto superFruit = entityManager_->GetAllEntitiesWithComponent<SuperFruitComponent>().at(0); // Limited to only one at time
 
+		// ****************
+		// * SuperFruit *
+		// ****************
+		auto superFruit = entityManager_->GetAllEntitiesWithComponent<SuperFruitComponent>().at(0); // Limited to only one at time
+		
 		if (!superFruit->GetComponent<SuperFruitComponent>()->m_shown && m_superChange > 360)
 		{						
 			m_superChange = 0;
@@ -114,6 +124,7 @@ namespace Game {
 		else if (superFruit->GetComponent<SuperFruitComponent>()->m_shown)
 		{
 
+			// SuperFruit Collision
 			auto collider = superFruit->GetComponent<Engine::CollisionComponent>();
 
 			for (const auto& entity : collider->m_CollidedWith)
@@ -124,7 +135,7 @@ namespace Game {
 					entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = true;
 				}
 
-				if (entity->HasComponent<BumperComponent>())
+				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = superFruit->GetComponent<Engine::TransformComponent>();
@@ -133,6 +144,7 @@ namespace Game {
 				}
 			}
 			
+			// TimeOut 
 			if (m_superChange > 390)
 			{
 				auto transformator = superFruit->GetComponent<Engine::TransformComponent>();
