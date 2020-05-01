@@ -80,15 +80,15 @@ namespace Game
         auto dataEntity = entityManager_->GetAllEntitiesWithComponent<PositionComponent>()[0];
 
         //update head for input and movement
-        for (auto& entity : headEntities)
+        for (auto& head : headEntities)
         {
-            auto move = entity->GetComponent<Engine::MoverComponent>();
-            auto input = entity->GetComponent<Engine::InputComponent>();
-            auto player = entity->GetComponent<Engine::PlayerComponent>();
-            auto transform = entity->GetComponent<Engine::TransformComponent>();    
+            auto move = head->GetComponent<Engine::MoverComponent>();
+            auto input = head->GetComponent<Engine::InputComponent>();
+            auto player = head->GetComponent<Engine::PlayerComponent>();
+            auto transform = head->GetComponent<Engine::TransformComponent>();    
 
             auto speed = player->m_PlayerSpeed;
-            auto direction = entity->GetComponent<HeadComponent>()->m_Direction;
+            auto direction = head->GetComponent<HeadComponent>()->m_Direction;
             auto position = transform->m_Position;
 
             bool moveUpInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveUp"));
@@ -100,24 +100,153 @@ namespace Game
             auto prevPosition = dataEntity->GetComponent<PositionComponent>()->m_Positions[0];
 
             if (moveUpInput && !(direction == EHeadDirection::Down)) {
-                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Up;
+                head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Up;
             }
             else if (moveDownInput && !(direction == EHeadDirection::Up)) {
-                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Down;
+                head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Down;
             }
             else if (moveLeftInput && !(direction == EHeadDirection::Right)) {
-                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Left;
+                head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Left;
             }
             else if (moveRightInput && !(direction == EHeadDirection::Left)) {
-                entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
+                head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
             }
 
-            direction = entity->GetComponent<HeadComponent>()->m_Direction;
+            direction = head->GetComponent<HeadComponent>()->m_Direction;
+
+            //collision with other entities 
+            auto collider = head->GetComponent<Engine::CollisionComponent>();
+
+            for (const auto& entityCollided : collider->m_CollidedWith)
+            {
+                //if snake hit itself reset game
+                if (entityCollided->HasComponent<BodyComponent>()) {
+                    ResetSnake(entityManager_);
+                }
+
+                //================================================//
+                // Collision with Walls
+                //================================================//
+                if (entityCollided->HasComponent<BumperComponent>())
+                {
+                    hasHitBumper = true;
+
+                    auto position = head->GetComponent<Engine::TransformComponent>()->m_Position;
+                    auto helpEntity = entityManager_->GetAllEntitiesWithComponent<HelperComponent>()[0];
+                    transform->m_Position = prevPosition;
+
+                    auto helperTransform = helpEntity->GetComponent<Engine::TransformComponent>();
+                    helperTransform->m_Position = prevPosition;
+                    auto helperCollider = helpEntity->GetComponent<Engine::CollisionComponent>();
+
+                    auto bumperEntites = entityManager_->GetAllEntitiesWithComponent<BumperComponent>();
+
+                    float x, y; // Coordinates of snake head
+
+                    switch (direction)
+                    {
+                    case EHeadDirection::Left:
+                        y = helperTransform->m_Position.y;
+                        helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
+                        direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
+
+                        //for (const auto& collision : helperCollider->m_CollidedWith)
+                        //{                                
+                            //if (collision->HasComponent<BumperComponent>())
+                        for (auto bumper : bumperEntites) {
+                            if (Engine::CheckForCollision(helpEntity, bumper))
+                            {
+                                if (direction == EHeadDirection::Down)
+                                    direction = EHeadDirection::Up;
+                                else
+                                    direction = EHeadDirection::Down;
+                            }
+                        }
+                        break;
+
+                    case EHeadDirection::Right:
+                        y = helperTransform->m_Position.y;
+                        helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
+                        direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
+
+                        //for (const auto& collision : helperCollider->m_CollidedWith)
+                        for (auto bumper : bumperEntites)
+                        {
+                            //if (collision->HasComponent<BumperComponent>())
+                            if (Engine::CheckForCollision(helpEntity, bumper))
+                            {
+                                if (direction == EHeadDirection::Down)
+                                    direction = EHeadDirection::Up;
+                                else
+                                    direction = EHeadDirection::Down;
+                            }
+                        }
+                        break;
+
+                    case EHeadDirection::Up:
+                        x = helperTransform->m_Position.x;
+                        helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
+                        direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
+
+                        //for (const auto& collision : helperCollider->m_CollidedWith)
+                        for (auto bumper : bumperEntites)
+                        {
+                            //if (collision->HasComponent<BumperComponent>())
+                            if (Engine::CheckForCollision(helpEntity, bumper))
+                            {
+                                if (direction == EHeadDirection::Left)
+                                    direction = EHeadDirection::Right;
+                                else
+                                    direction = EHeadDirection::Left;
+                            }
+                        }
+                        break;
+
+                    case EHeadDirection::Down:
+                        x = helperTransform->m_Position.x;
+                        helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
+                        direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
+
+                        //for (const auto& collision : helperCollider->m_CollidedWith)
+                        for (auto bumper : bumperEntites)
+                        {
+                            //if (collision->HasComponent<BumperComponent>())
+                            if (Engine::CheckForCollision(helpEntity, bumper))
+                            {
+                                if (direction == EHeadDirection::Left)
+                                    direction = EHeadDirection::Right;
+                                else
+                                    direction = EHeadDirection::Left;
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
+                    }
+
+                    head->GetComponent<HeadComponent>()->m_Direction = direction;
+                    transform->m_Position.x += 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
+                    transform->m_Position.y += 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
+                }
+                //================================================//
+            }
 
             //if enough time has passed we can activate the system
             if (m_passedTime > timeThreshold) {
 
                 //Collision
+
+                //if head collided with fruit append it if it collided with superfruit increase speed/framerate
+                if (head->GetComponent<HeadComponent>()->m_HasEatenFruit) {
+                    AppendSnake(entityManager_, 1);
+                    head->GetComponent<HeadComponent>()->m_HasEatenFruit = false;
+                }
+                if (head->GetComponent<HeadComponent>()->m_HasEatenSuperFruit) {
+                    m_framerate += 2;
+                    head->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = false;
+                }
+
 
                 // Collision/movement with window edges
                 if (transform->m_Position.x < -620.f){
@@ -135,134 +264,6 @@ namespace Game
                 else if (transform->m_Position.y > 340.f){
                     transform->m_Position.y = -340.f;
                     hasHitWall = true;
-                }
-
-                //if head collided with fruit append it if it collided with superfruit increase speed/framerate
-                if (entity->GetComponent<HeadComponent>()->m_HasEatenFruit) {
-                    AppendSnake(entityManager_, 1);
-                    entity->GetComponent<HeadComponent>()->m_HasEatenFruit = false;
-                }
-                if (entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit) {
-                    m_framerate +=2;
-                    entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = false;
-                }
-                
-                //collision with other entities 
-                auto collider = entity->GetComponent<Engine::CollisionComponent>();
-
-                for (const auto& entityCollided : collider->m_CollidedWith)
-                {
-                    //if snake hit itself reset game
-                    if (entityCollided->HasComponent<BodyComponent>()) {
-                        ResetSnake(entityManager_);
-                    }
-
-                    //================================================//
-                    // Collision with Walls
-                    //================================================//
-                    if (entityCollided->HasComponent<BumperComponent>())
-                    {     
-                        hasHitBumper = true;
-                        
-                        auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;                                 
-                        auto helpEntity = entityManager_->GetAllEntitiesWithComponent<HelperComponent>()[0];
-                        transform->m_Position = prevPosition;
-
-                        auto helperTransform = helpEntity->GetComponent<Engine::TransformComponent>();
-                        helperTransform->m_Position = prevPosition;
-                        auto helperCollider = helpEntity->GetComponent<Engine::CollisionComponent>();
-
-                        auto bumperEntites = entityManager_->GetAllEntitiesWithComponent<BumperComponent>();
-
-                        float x, y; // Coordinates of snake head
-
-                        switch (direction)
-                        {
-                        case EHeadDirection::Left:
-                            y = helperTransform->m_Position.y;
-                            helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
-                            direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
-
-                            //for (const auto& collision : helperCollider->m_CollidedWith)
-                            //{                                
-                                //if (collision->HasComponent<BumperComponent>())
-                            for (auto bumper : bumperEntites) {
-                                if (Engine::CheckForCollision(helpEntity, bumper))
-                                {
-                                    if (direction == EHeadDirection::Down)
-                                        direction = EHeadDirection::Up;
-                                    else
-                                        direction = EHeadDirection::Down;
-                                }
-                            }                          
-                            break;
-
-                        case EHeadDirection::Right:                            
-                            y = helperTransform->m_Position.y;
-                            helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
-                            direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
-
-                            //for (const auto& collision : helperCollider->m_CollidedWith)
-                            for(auto bumper:bumperEntites)
-                            {
-                                //if (collision->HasComponent<BumperComponent>())
-                                if(Engine::CheckForCollision(helpEntity,bumper))
-                                {
-                                    if (direction == EHeadDirection::Down)
-                                        direction = EHeadDirection::Up;
-                                    else
-                                        direction = EHeadDirection::Down;
-                                }
-                            }
-                            break;
-
-                        case EHeadDirection::Up:
-                            x = helperTransform->m_Position.x;
-                            helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
-                            direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
-
-                            //for (const auto& collision : helperCollider->m_CollidedWith)
-                            for(auto bumper:bumperEntites)
-                            {
-                                //if (collision->HasComponent<BumperComponent>())
-                                if(Engine::CheckForCollision(helpEntity,bumper))
-                                {
-                                    if (direction == EHeadDirection::Left)
-                                        direction = EHeadDirection::Right;
-                                    else
-                                        direction = EHeadDirection::Left;
-                                }
-                            }
-                            break;
-
-                        case EHeadDirection::Down:
-                            x = helperTransform->m_Position.x;
-                            helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
-                            direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
-
-                            //for (const auto& collision : helperCollider->m_CollidedWith)
-                            for(auto bumper:bumperEntites)
-                            {
-                                //if (collision->HasComponent<BumperComponent>())
-                                if(Engine::CheckForCollision(helpEntity,bumper))
-                                {
-                                    if (direction == EHeadDirection::Left)
-                                        direction = EHeadDirection::Right;
-                                    else
-                                        direction = EHeadDirection::Left;
-                                }
-                            }
-                            break;
-
-                        default:
-                            break;
-                        }
-
-                        entity->GetComponent<HeadComponent>()->m_Direction = direction;
-                        transform->m_Position.x += 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
-                        transform->m_Position.y+= 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
-                    }
-                    //================================================//
                 }
 
                 //Movement
@@ -322,6 +323,7 @@ namespace Game
             }
         }
     }
+
     void PlayerController::AppendSnake(Engine::EntityManager* entityManager_, int length)
     {
         auto dataEntity = entityManager_->GetAllEntitiesWithComponent<PositionComponent>()[0];
@@ -334,6 +336,7 @@ namespace Game
         }
         
     }
+
     void PlayerController::ResetSnake(Engine::EntityManager* entityManager_)
     {
         auto headEntity = entityManager_->GetAllEntitiesWithComponent<HeadComponent>();
