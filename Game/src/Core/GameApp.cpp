@@ -48,21 +48,22 @@ bool Game::GameApp::GameSpecificInit()
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit4"));
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit5"));
     
+    
+
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
-    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("black"));    
+    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("black")); 
 
-
-    // Lvl init TEST: WILL BE MOVED TO GameSpecificUpdate
-    m_Stadium->InitLvl1(m_EntityManager.get());
+    // Player
+    m_PlayerController = std::make_unique<PlayerController>();
+    m_PlayerController->Init(m_EntityManager.get(), m_TextureManager->GetTexture("snakeBody"));
 
     // Fruit 
     m_FruitController = std::make_unique<FruitController>(); // Importaint to be after Stadium to be drawn over it
     m_FruitController->Init(m_EntityManager.get(), fruitTextures);    
 
-    // Player
-    m_PlayerController = std::make_unique<PlayerController>();
-    m_PlayerController->Init(m_EntityManager.get(), m_TextureManager->GetTexture("snakeBody"));
+    // Lvl init TEST: WILL BE MOVED TO GameSpecificUpdate
+    m_Stadium->InitLvl1(m_EntityManager.get());
 
     //Main Menu
     m_MainMenu = std::make_unique<MainMenu>();

@@ -7,8 +7,7 @@
 
 namespace Engine
 {
-        bool CheckForCollision(Entity * entity1, Entity * entity2);
-        bool CheckForCollisionAABoxVsCircle(Entity * entity1, Entity * entity2);
+       
 
     bool PhysicsSystem::Init()
     {   

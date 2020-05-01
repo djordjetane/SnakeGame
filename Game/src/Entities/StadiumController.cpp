@@ -86,8 +86,8 @@ namespace Game
         // horizontal        
         auto wall = std::make_unique<Engine::Entity>();
         wall->AddComponent<BumperComponent>();
-        wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 200.f, 240.f);
-        wall->AddComponent<Engine::CollisionComponent>(200.f, 240.f);
+        wall->AddComponent<Engine::TransformComponent>(0.f, 0.f, 160.f, 240.f);
+        wall->AddComponent<Engine::CollisionComponent>(160.f, 240.f);
         wall->AddComponent<Engine::SpriteComponent>().m_Image = m_textureWall;
         entityManager_->AddEntity(std::move(wall));
         // vertical
