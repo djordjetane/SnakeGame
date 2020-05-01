@@ -10,7 +10,7 @@ namespace Game
         ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to PlayerController::Init()");
         ASSERT(texture_ != nullptr, "Must pass valid pointer to texture to PlayerController::Init()");
 
-        m_framerate = 10;
+        m_framerate = 8;
         m_passedTime;
 
         auto data = std::make_unique<Engine::Entity>();;
@@ -72,11 +72,12 @@ namespace Game
         m_passedTime += dt;
         float timeThreshold = 1.f / m_framerate;
 
-        int snakeLength;
+        bool hasHitBumper = false;
+        bool hasHitWall = false;
 
         auto headEntities = entityManager_->GetAllEntitiesWithComponents<Engine::PlayerComponent, Engine::MoverComponent, Engine::InputComponent, Engine::TransformComponent>();
         auto bodyEntities = entityManager_->GetAllEntitiesWithComponents<BodyComponent,Engine::PlayerComponent, Engine::TransformComponent>();
-        auto dataEntities = entityManager_->GetAllEntitiesWithComponent<PositionComponent>();
+        auto dataEntity = entityManager_->GetAllEntitiesWithComponent<PositionComponent>()[0];
 
         //update head for input and movement
         for (auto& entity : headEntities)
@@ -94,10 +95,9 @@ namespace Game
             bool moveDownInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveDown"));
             bool moveLeftInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveLeft"));
             bool moveRightInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveRight"));
-
-            for (auto& data : dataEntities) {
-                data->GetComponent<PositionComponent>()->m_Positions[0] = position;
-            }
+            
+            //saving previous position
+            auto prevPosition = dataEntity->GetComponent<PositionComponent>()->m_Positions[0];
 
             if (moveUpInput && !(direction == EHeadDirection::Down)) {
                 entity->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Up;
@@ -116,30 +116,26 @@ namespace Game
 
             //if enough time has passed we can activate the system
             if (m_passedTime > timeThreshold) {
-                
-                //Movement
-                move->m_TranslationSpeed = { 0.f,0.f };
+
+                //Collision
 
                 // Collision/movement with window edges
                 if (transform->m_Position.x < -620.f){
                     transform->m_Position.x = 620.f;
+                    hasHitWall = true;
                 }
                 else if(transform->m_Position.x > 620.f){
                     transform->m_Position.x = -620.f;
+                    hasHitWall = true;
                 }
                 else if (transform->m_Position.y < -340.f){
                     transform->m_Position.y = 340.f;
+                    hasHitWall = true;
                 }
                 else if (transform->m_Position.y > 340.f){
                     transform->m_Position.y = -340.f;
+                    hasHitWall = true;
                 }
-                else {
-                    //update speed
-                    move->m_TranslationSpeed.x = 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
-                    move->m_TranslationSpeed.y = 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
-                }
-
-                //Collision
 
                 //if head collided with fruit append it if it collided with superfruit increase speed/framerate
                 if (entity->GetComponent<HeadComponent>()->m_HasEatenFruit) {
@@ -147,10 +143,11 @@ namespace Game
                     entity->GetComponent<HeadComponent>()->m_HasEatenFruit = false;
                 }
                 if (entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit) {
-                    m_framerate +=4;
+                    m_framerate +=2;
                     entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = false;
                 }
-    
+                
+                //collision with other entities 
                 auto collider = entity->GetComponent<Engine::CollisionComponent>();
 
                 for (const auto& entityCollided : collider->m_CollidedWith)
@@ -164,13 +161,15 @@ namespace Game
                     // Collision with Walls
                     //================================================//
                     if (entityCollided->HasComponent<BumperComponent>())
-                    {                         
+                    {     
+                        hasHitBumper = true;
                         
                         auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;                                 
                         auto helpEntity = entityManager_->GetAllEntitiesWithComponent<HelperComponent>()[0];
+                        transform->m_Position = prevPosition;
 
                         auto helperTransform = helpEntity->GetComponent<Engine::TransformComponent>();
-                        helperTransform->m_Position = position;
+                        helperTransform->m_Position = prevPosition;
                         auto helperCollider = helpEntity->GetComponent<Engine::CollisionComponent>();
 
                         float x, y; // Coordinates of snake head
@@ -249,9 +248,22 @@ namespace Game
                             break;
                         }
 
-                        entity->GetComponent<HeadComponent>()->m_Direction = direction;                        
+                        entity->GetComponent<HeadComponent>()->m_Direction = direction;
+                        transform->m_Position.x += 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
+                        transform->m_Position.y+= 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
                     }
                     //================================================//
+                }
+
+                //Movement
+
+                //save previous position
+                dataEntity->GetComponent<PositionComponent>()->m_Positions[0] = position;
+
+                //update speed
+                if (!hasHitBumper && !hasHitWall) {
+                    move->m_TranslationSpeed.x = 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
+                    move->m_TranslationSpeed.y = 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
                 }
             }
             //if not enough time passed just stay in place 
@@ -261,25 +273,23 @@ namespace Game
         }
       
         //save current positions first
-        for (auto& entity : bodyEntities) {
-            auto index = entity->GetComponent<BodyComponent>()->m_Index;
-            auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;
-            
-            for (auto& data : dataEntities) {
-                data->GetComponent<PositionComponent>()->m_Positions[index] = position;
+        if (m_passedTime > timeThreshold && !hasHitBumper) {
+            for (auto& entity : bodyEntities) {
+                auto index = entity->GetComponent<BodyComponent>()->m_Index;
+                auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;
+
+                dataEntity->GetComponent<PositionComponent>()->m_Positions[index] = position;
             }
         }
 
         //update other body parts
-        for (auto& entity : bodyEntities) {
-            //if enough time has passed set new position
-            if (m_passedTime > timeThreshold) {
+        //if enough time has passed set new position
+        if (m_passedTime > timeThreshold && !hasHitBumper) {
+            for (auto& entity : bodyEntities) {
                 auto index = entity->GetComponent<BodyComponent>()->m_Index;
                 auto position = entity->GetComponent<Engine::TransformComponent>()->m_Position;
  
-                for (auto& data : dataEntities) {
-                    entity->GetComponent<Engine::TransformComponent>()->m_Position = data->GetComponent<PositionComponent>()->m_Positions[index - 1];
-                }
+                entity->GetComponent<Engine::TransformComponent>()->m_Position = dataEntity->GetComponent<PositionComponent>()->m_Positions[index - 1];    
             }
         }
 
@@ -304,16 +314,15 @@ namespace Game
     }
     void PlayerController::AppendSnake(Engine::EntityManager* entityManager_, int length)
     {
-        auto dataEntities = entityManager_->GetAllEntitiesWithComponent<PositionComponent>();
+        auto dataEntity = entityManager_->GetAllEntitiesWithComponent<PositionComponent>()[0];
 
         //append snake for length num of parts
-        for (auto& data : dataEntities) {
-            auto snakeLength = data->GetComponent<PositionComponent>()->m_CurrentLength;
-            for (int i = 0; i < length; i++) {
-                ActivateBodyPart(entityManager_, snakeLength, data->GetComponent<PositionComponent>()->m_Positions[snakeLength - 1]);
-                data->GetComponent<PositionComponent>()->m_CurrentLength = ++snakeLength;
-            }
+        auto snakeLength = dataEntity->GetComponent<PositionComponent>()->m_CurrentLength;
+        for (int i = 0; i < length; i++) {
+            ActivateBodyPart(entityManager_, snakeLength, dataEntity->GetComponent<PositionComponent>()->m_Positions[snakeLength - 1]);
+            dataEntity->GetComponent<PositionComponent>()->m_CurrentLength = ++snakeLength;
         }
+        
     }
     void PlayerController::ResetSnake(Engine::EntityManager* entityManager_)
     {
@@ -322,7 +331,7 @@ namespace Game
         auto dataEntity = entityManager_->GetAllEntitiesWithComponent<PositionComponent>();
 
         for (auto head : headEntity) {
-            head->GetComponent<Engine::TransformComponent>()->m_Position = { -320.f,20.f };
+            head->GetComponent<Engine::TransformComponent>()->m_Position = { -300.f,20.f };
             head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
             
             head->GetComponent<Engine::MoverComponent>()->m_TranslationSpeed = { 0.f,0.f };
@@ -331,7 +340,7 @@ namespace Game
         for (auto part : bodyEntities) {
             auto index = part->GetComponent<BodyComponent>()->m_Index;
             if (index < 3) {
-                part->GetComponent<Engine::TransformComponent>()->m_Position = { -320.f-40*index,20.f };
+                part->GetComponent<Engine::TransformComponent>()->m_Position = { -300.f-40*index,20.f };
             }
             else {
                 part->GetComponent<Engine::SpriteComponent>()->m_Active = false;
@@ -343,6 +352,6 @@ namespace Game
             data->GetComponent<PositionComponent>()->m_CurrentLength = 3;
         }
 
-        m_framerate = 10;
+        m_framerate = 8;
     }
 }
