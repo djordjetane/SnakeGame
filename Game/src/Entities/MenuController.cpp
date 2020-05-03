@@ -5,19 +5,22 @@
 namespace Game
 {
     bool MainMenu::Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_1, 
-        Engine::Texture* texture_2, Engine::Texture* texture_3, Engine::Texture* texture_4)
+        Engine::Texture* texture_2, Engine::Texture* texture_3, Engine::Texture* texture_4, Engine::Texture* texture_5)
     {
         ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to Menu::Init()");
 
+        m_isUpKeyReleased = true;
+        m_isDownKeyReleased = true;
+
         auto background = std::make_unique<Engine::Entity>();
         background->AddComponent<Engine::TransformComponent>(0.f, 0.f, 1280.f, 740.f);
-        background->AddComponent<Engine::SpriteComponent>().m_Image = texture_4;
+        background->AddComponent<Engine::SpriteComponent>().m_Image = texture_5;
         background->AddComponent<MainMenuComponent>();
         entityManager_->AddEntity(std::move(background));
 
         auto selectionSquare = std::make_unique<Engine::Entity>();
         selectionSquare->AddComponent<Engine::TransformComponent>(0.f, -100.f, 290.f, 80.f);
-        selectionSquare->AddComponent<Engine::SpriteComponent>().m_Image = texture_3;
+        selectionSquare->AddComponent<Engine::SpriteComponent>().m_Image = texture_4;
         selectionSquare->AddComponent<Engine::InputComponent>();
         selectionSquare->AddComponent<SelectionComponent>();
         auto input = selectionSquare->GetComponent<Engine::InputComponent>();
@@ -34,11 +37,16 @@ namespace Game
         entityManager_->AddEntity(std::move(menuItem1));
 
         auto menuItem2 = std::make_unique<Engine::Entity>();
-        menuItem2->AddComponent<Engine::TransformComponent>(0.f, 100.f, 300.f, 95.f);
+        menuItem2->AddComponent<Engine::TransformComponent>(0.f, 0.f, 300.f, 95.f);
         menuItem2->AddComponent<Engine::SpriteComponent>().m_Image = texture_2;
         menuItem2->AddComponent<MainMenuComponent>();
         entityManager_->AddEntity(std::move(menuItem2));
-
+        
+        auto menuItem3 = std::make_unique<Engine::Entity>();
+        menuItem3->AddComponent<Engine::TransformComponent>(0.f, 100.f, 300.f, 95.f);
+        menuItem3->AddComponent<Engine::SpriteComponent>().m_Image = texture_3;
+        menuItem3->AddComponent<MainMenuComponent>();
+        entityManager_->AddEntity(std::move(menuItem3));
        
         return true;
     }
@@ -55,30 +63,67 @@ namespace Game
             bool moveUpInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveUp"));
             bool moveDownInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveDown"));
             bool select = Engine::InputManager::IsActionActive(input, fmt::format("Select"));
-            
-            if (select) {
+
+            if (transform->m_Position.y == 9000.f && *gameState == Engine::GameState::MainMenu) {
+                transform->m_Position.y = -100.f;
+                if (select) {
+                    m_isSelectKeyReleased = false;
+                }
+            }
+
+            if (!select && !m_isSelectKeyReleased) {
+                m_isSelectKeyReleased = true;
+            }
+
+            if (select && m_isSelectKeyReleased) {
                 if (transform->m_Position.y == -100.f) {
                     *gameState = Engine::GameState::PlayingLevel;
-                    entity->RemoveAllComponents();
+                    transform->m_Position.y = 9000.f;
+                }
+                else if (transform->m_Position.y == 0.f) {
+                    *gameState = Engine::GameState::PlayingInfiniteLevel;
+                    transform->m_Position.y = 9000.f;
                 }
                 else {
                     *gameState = Engine::GameState::QuitGame;
                 }
             }
-            
-            if (moveUpInput) {
-                transform->m_Position.y= -100.f;
+            if (!moveUpInput && !m_isUpKeyReleased) {
+                m_isUpKeyReleased = true;
             }
-            else if (moveDownInput) {
-                transform->m_Position.y = 100.f;
+            if (!moveDownInput && !m_isDownKeyReleased) {
+                m_isDownKeyReleased = true;
+            }
+            if (moveUpInput && m_isUpKeyReleased) {
+                if (transform->m_Position.y == -100.f || transform->m_Position.y == 0.f) {
+                    transform->m_Position.y = -100.f;
+                }
+                else if (transform->m_Position.y == 100.f) {
+                    transform->m_Position.y = 0.f;
+                }
+                m_isUpKeyReleased = false;
+            }
+            else if (moveDownInput && m_isDownKeyReleased) {
+                if (transform->m_Position.y == 100.f || transform->m_Position.y == 0.f) {
+                    transform->m_Position.y = 100.f;
+                }
+                else if (transform->m_Position.y == -100.f) {
+                    transform->m_Position.y = 0.f;
+                }
+                m_isDownKeyReleased = false;
             }
             
         }
-        if (*gameState == Engine::GameState::PlayingLevel) {
+        {
             for (auto& entity : menuStuff)
             {
                 auto transform = entity->GetComponent<Engine::TransformComponent>();
-                entity->RemoveAllComponents();
+                if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::MainMenu) {
+                    transform->m_Position.y = transform->m_Position.y - 9000.f;
+                }
+                if (*gameState == Engine::GameState::PlayingLevel || *gameState == Engine::GameState::PlayingInfiniteLevel) {
+                    transform->m_Position.y = transform->m_Position.y + 9000.f;
+                }
             }
         }
     }

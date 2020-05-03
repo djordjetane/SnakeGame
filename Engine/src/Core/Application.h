@@ -13,7 +13,10 @@ namespace Engine {
     enum class GameState {
         MainMenu,
         PlayingLevel,
+        PlayingInfiniteLevel,
+        GameModeMenu,
         RestartingLevel,
+        ResumingLevel,
         LevelWon,
         LevelLost,
         PauseMenu,

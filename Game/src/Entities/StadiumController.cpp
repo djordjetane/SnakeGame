@@ -179,4 +179,11 @@ namespace Game
         return true;
     }
 
+    void Stadium::Destroy(Engine::EntityManager* entityManager_) {
+        auto bumerEntities = entityManager_->GetAllEntitiesWithComponent<BumperComponent>();
+        for (auto entity : bumerEntities) {
+            entity->RemoveAllComponents();
+        }
+    }
+
 } // Game

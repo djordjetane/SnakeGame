@@ -7,6 +7,10 @@ namespace Game
     class GameApp final : public Engine::Application
     {
     private:
+        bool m_firstLoad;
+
+        Engine::GameState m_GameMode;
+
         void GameSpecificWindowData() override;
         bool GameSpecificInit() override;
         void GameSpecificUpdate(float dt) override;
