@@ -8,3 +8,4 @@
 #include "Entities\MenuController.h"
 #include "Entities\PauseMenuController.h"
 #include "Entities\ResumeController.h"
+#include "Entities\GameModeController.h"

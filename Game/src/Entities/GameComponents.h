@@ -69,6 +69,21 @@ namespace Game
         int numInQueue = 5;
     };
 
+    struct GameModeMenuComponent : public Engine::Component
+    {
+
+    };
+
+    struct GameModeMenuSelectionComponent : public Engine::Component
+    {
+
+    };
+
+    struct GameModeMenuHighlightComponent : public Engine::Component
+    {
+        int numOfHighlight = 1;
+    };
+
     struct GridComponent : public Engine::Component
     {
 
@@ -88,4 +103,5 @@ namespace Game
     {
 
     };
+   
 }

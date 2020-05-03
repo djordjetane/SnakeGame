@@ -23,6 +23,7 @@ namespace Game
         std::unique_ptr<MainMenu> m_MainMenu{};
         std::unique_ptr<PauseMenu> m_PauseMenu{};
         std::unique_ptr<ResumeScreen> m_ResumeScreen{};
+        std::unique_ptr<GameModeMenu> m_GameModeMenu{};
     };
 
 }

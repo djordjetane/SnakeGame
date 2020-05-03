@@ -77,7 +77,7 @@ namespace Game
 
             if (select && m_isSelectKeyReleased) {
                 if (transform->m_Position.y == -100.f) {
-                    *gameState = Engine::GameState::PlayingLevel;
+                    *gameState = Engine::GameState::GameModeMenu;
                     transform->m_Position.y = 9000.f;
                 }
                 else if (transform->m_Position.y == 0.f) {
@@ -121,7 +121,7 @@ namespace Game
                 if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::MainMenu) {
                     transform->m_Position.y = transform->m_Position.y - 9000.f;
                 }
-                if (*gameState == Engine::GameState::PlayingLevel || *gameState == Engine::GameState::PlayingInfiniteLevel) {
+                if (*gameState != Engine::GameState::MainMenu) {
                     transform->m_Position.y = transform->m_Position.y + 9000.f;
                 }
             }

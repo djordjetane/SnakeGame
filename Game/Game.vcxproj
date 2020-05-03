@@ -162,6 +162,7 @@
     <ClInclude Include="src\Entities\CameraController.h" />
     <ClInclude Include="src\Entities\FruitController.h" />
     <ClInclude Include="src\Entities\GameComponents.h" />
+    <ClInclude Include="src\Entities\GameModeController.h" />
     <ClInclude Include="src\Entities\MenuController.h" />
     <ClInclude Include="src\Entities\PauseMenuController.h" />
     <ClInclude Include="src\Entities\PlayerController.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="src\Core\GameApp.cpp" />
     <ClCompile Include="src\Entities\CameraController.cpp" />
     <ClCompile Include="src\Entities\FruitController.cpp" />
+    <ClCompile Include="src\Entities\GameModeController.cpp" />
     <ClCompile Include="src\Entities\MenuController.cpp" />
     <ClCompile Include="src\Entities\PauseMenuController.cpp" />
     <ClCompile Include="src\Entities\PlayerController.cpp" />
