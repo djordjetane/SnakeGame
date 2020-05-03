@@ -43,6 +43,10 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "white", "..\\Data\\blank.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "black", "..\\Data\\black.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "transparent", "..\\Data\\transparent.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume_1", "..\\Data\\1.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume_2", "..\\Data\\2.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume_3", "..\\Data\\3.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume_go", "..\\Data\\go.png");
 
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit1", "..\\Data\\fruit1.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit2", "..\\Data\\fruit2.png");
@@ -84,6 +88,10 @@ bool Game::GameApp::GameSpecificInit()
     m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("resume"), m_TextureManager->GetTexture("quit"),
         m_TextureManager->GetTexture("white"), m_TextureManager->GetTexture("transparent"), m_TextureManager->GetTexture("main_menu"));
 
+    m_ResumeScreen = std::make_unique<ResumeScreen>();
+    m_ResumeScreen->Init(m_EntityManager.get(), m_TextureManager->GetTexture("resume_1"), m_TextureManager->GetTexture("resume_2"),
+        m_TextureManager->GetTexture("resume_3"), m_TextureManager->GetTexture("resume_go"), m_TextureManager->GetTexture("transparent"));
+
     return true;
 }
 
@@ -115,6 +123,9 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
         }
+    }
+    else if (m_GameState == Engine::GameState::ResumingLevel) {
+        m_ResumeScreen->Update(dt, m_EntityManager.get(), &m_GameState, m_GameMode);
     }
     else {
         m_MainMenu->Update(dt, m_EntityManager.get(), &m_GameState);

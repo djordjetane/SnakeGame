@@ -64,6 +64,11 @@ namespace Game
 
     };
 
+    struct ResumeScreenComponent : public Engine::Component
+    {
+        int numInQueue = 5;
+    };
+
     struct GridComponent : public Engine::Component
     {
 
