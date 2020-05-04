@@ -4,6 +4,7 @@
 
 namespace Game
 {
+    
     class GameApp final : public Engine::Application
     {
     private:
@@ -15,6 +16,8 @@ namespace Game
         bool GameSpecificInit() override;
         void GameSpecificUpdate(float dt) override;
         bool GameSpecificShutdown() override;
+
+        std::unique_ptr<Engine::GameModeSettings> m_GameModeSettings{};
 
         std::unique_ptr<PlayerController> m_PlayerController{};
         std::unique_ptr<CameraController> m_CameraController{};

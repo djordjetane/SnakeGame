@@ -10,6 +10,12 @@ namespace Engine {
     class EntityManager;
     class TextureManager;
 
+    struct GameModeSettings {
+        int borders;
+        int bumpers;
+        int difficulty;
+    };
+
     enum class GameState {
         MainMenu,
         PlayingLevel,

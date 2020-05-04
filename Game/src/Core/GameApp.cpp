@@ -61,7 +61,11 @@ bool Game::GameApp::GameSpecificInit()
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit4"));
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit5"));
     
-    
+    m_GameModeSettings = std::make_unique<Engine::GameModeSettings>();
+    m_GameModeSettings->borders = 1;
+    m_GameModeSettings->bumpers = 1;
+    m_GameModeSettings->difficulty = 1;
+
     m_firstLoad = true;
     m_GameMode = Engine::GameState::PlayingLevel;
     // Stadium
@@ -110,7 +114,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_GameState = Engine::GameState::ResumingLevel;
             m_firstLoad = false;
         }
-        m_PlayerController->Update(dt, m_EntityManager.get());
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), &m_GameState);
     }
@@ -120,7 +124,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_GameState = Engine::GameState::ResumingLevel;
             m_firstLoad = false;
         }
-        m_PlayerController->Update(dt, m_EntityManager.get());
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), &m_GameState);
     }
@@ -136,7 +140,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_ResumeScreen->Update(dt, m_EntityManager.get(), &m_GameState, m_GameMode);
     }
     else if (m_GameState == Engine::GameState::GameModeMenu) {
-        m_GameModeMenu->Update(dt, m_EntityManager.get(), &m_GameState, m_GameMode);
+        m_GameModeMenu->Update(dt, m_EntityManager.get(), &m_GameState, m_GameMode, m_GameModeSettings.get());
     }
     else {
         m_MainMenu->Update(dt, m_EntityManager.get(), &m_GameState);

@@ -121,7 +121,7 @@ namespace Game
         return true;
     }
 
-    void GameModeMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState, Engine::GameState gameMode)
+    void GameModeMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState, Engine::GameState gameMode, Engine::GameModeSettings* gameModeSettings)
     {
         auto selectionBox = entityManager_->GetAllEntitiesWithComponents<GameModeMenuSelectionComponent, Engine::InputComponent, Engine::TransformComponent>();
         auto menuStuff = entityManager_->GetAllEntitiesWithComponents<GameModeMenuComponent, Engine::TransformComponent>();
@@ -163,16 +163,19 @@ namespace Game
                 if (selected == 1 && transform->m_Position.y == -200.f) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
+                        gameModeSettings->borders = 1;
                     }
                 }
                 else if (selected == 2 && transform->m_Position.y == -50.f) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
+                        gameModeSettings->bumpers = 1;
                     }
                 }
                 else if (selected == 3 && transform->m_Position.y == 100.f) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
+                        gameModeSettings->difficulty = 1;
                     }
                 }
             }
@@ -181,16 +184,19 @@ namespace Game
                 if (selected == 1 && transform->m_Position.y == -200.f) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
+                        gameModeSettings->borders = 2;
                     }
                 }
                 else if (selected == 2 && transform->m_Position.y == -50.f) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
+                        gameModeSettings->bumpers = 2;
                     }
                 }
                 else if (selected == 3 && transform->m_Position.y == 100.f) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
+                        gameModeSettings->difficulty = 2;
                     }
                 }
             }
