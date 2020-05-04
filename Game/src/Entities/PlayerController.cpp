@@ -146,10 +146,10 @@ namespace Game
                     switch (direction)
                     {
                     case EHeadDirection::Left:
-                        y = position.y;
-                        helperTransform->m_Position.x = position.x;
+                        y = prevPosition.y;
+                        helperTransform->m_Position.x = prevPosition.x;
                         helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
-                        direction = y > helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
+                        direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
 
                         //for (const auto& collision : helperCollider->m_CollidedWith)
                         //{                                
@@ -166,10 +166,10 @@ namespace Game
                         break;
 
                     case EHeadDirection::Right:
-                        y = position.y;
-                        helperTransform->m_Position.x = position.x;
+                        y = prevPosition.y;
+                        helperTransform->m_Position.x = prevPosition.x;
                         helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
-                        direction = y > helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
+                        direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
 
                         //for (const auto& collision : helperCollider->m_CollidedWith)
                         for (auto bumper : bumperEntites)
@@ -186,10 +186,10 @@ namespace Game
                         break;
 
                     case EHeadDirection::Up:
-                        x = position.x;
-                        helperTransform->m_Position.y = position.y;
+                        x = prevPosition.x;
+                        helperTransform->m_Position.y = prevPosition.y;
                         helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
-                        direction = x > helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
+                        direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
 
                         //for (const auto& collision : helperCollider->m_CollidedWith)
                         for (auto bumper : bumperEntites)
@@ -206,10 +206,10 @@ namespace Game
                         break;
 
                     case EHeadDirection::Down:
-                        x = position.x;
-                        helperTransform->m_Position.y = position.y;
+                        x = prevPosition.x;
+                        helperTransform->m_Position.y = prevPosition.y;
                         helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
-                        direction = x > helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
+                        direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
 
                         //for (const auto& collision : helperCollider->m_CollidedWith)
                         for (auto bumper : bumperEntites)
