@@ -66,7 +66,7 @@ namespace Game
         return !(entityManager_->GetAllEntitiesWithComponent<Engine::PlayerComponent>().empty());
     }
 
-    void PlayerController::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameModeSettings* gameModeSettings, Engine::GameState gameMode)
+    void PlayerController::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameModeSettings* gameModeSettings, Engine::GameStates gameMode)
     {
         //count passed time
         m_passedTime += dt;

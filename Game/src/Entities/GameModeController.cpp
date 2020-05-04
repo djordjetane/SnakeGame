@@ -9,12 +9,7 @@ namespace Game
         Engine::Texture* texture_6, Engine::Texture* texture_7, Engine::Texture* texture_8, Engine::Texture* texture_9, 
         Engine::Texture* texture_10)
     {
-        ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to Menu::Init()");
-
-        m_isUpKeyReleased = true;
-        m_isDownKeyReleased = true;
-        m_isEnterKeyReleased = true;
-        m_isSpaceKeyReleased = true;
+        ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to GameModeMenu::Init()");
 
         auto background = std::make_unique<Engine::Entity>();
         background->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1280.f, 740.f);
@@ -29,8 +24,8 @@ namespace Game
         selectionSquare->AddComponent<GameModeMenuSelectionComponent>();
         auto input1 = selectionSquare->GetComponent<Engine::InputComponent>();
 
-        input1->inputActions.push_back({ fmt::format("Player1MoveUp") });
-        input1->inputActions.push_back({ fmt::format("Player1MoveDown") });
+        input1->inputActions.push_back({ fmt::format("Player1MoveUp"), Engine::EInputActionState::JustPressed });
+        input1->inputActions.push_back({ fmt::format("Player1MoveDown"), Engine::EInputActionState::JustPressed });
         entityManager_->AddEntity(std::move(selectionSquare));
 
         auto highlightSquare1 = std::make_unique<Engine::Entity>();
@@ -40,8 +35,8 @@ namespace Game
         highlightSquare1->AddComponent<GameModeMenuHighlightComponent>().numOfHighlight = 1;
         auto input2 = highlightSquare1->GetComponent<Engine::InputComponent>();
 
-        input2->inputActions.push_back({ fmt::format("Player1MoveLeft") });
-        input2->inputActions.push_back({ fmt::format("Player1MoveRight") });
+        input2->inputActions.push_back({ fmt::format("Player1MoveLeft"), Engine::EInputActionState::JustPressed });
+        input2->inputActions.push_back({ fmt::format("Player1MoveRight"), Engine::EInputActionState::JustPressed });
         entityManager_->AddEntity(std::move(highlightSquare1));
 
         auto highlightSquare2 = std::make_unique<Engine::Entity>();
@@ -51,8 +46,8 @@ namespace Game
         highlightSquare2->AddComponent<GameModeMenuHighlightComponent>().numOfHighlight = 2;
         auto input3 = highlightSquare2->GetComponent<Engine::InputComponent>();
 
-        input3->inputActions.push_back({ fmt::format("Player1MoveLeft") });
-        input3->inputActions.push_back({ fmt::format("Player1MoveRight") });
+        input3->inputActions.push_back({ fmt::format("Player1MoveLeft"), Engine::EInputActionState::JustPressed});
+        input3->inputActions.push_back({ fmt::format("Player1MoveRight"), Engine::EInputActionState::JustPressed });
         entityManager_->AddEntity(std::move(highlightSquare2));
 
         auto highlightSquare3 = std::make_unique<Engine::Entity>();
@@ -62,8 +57,8 @@ namespace Game
         highlightSquare3->AddComponent<GameModeMenuHighlightComponent>().numOfHighlight = 3;
         auto input4 = highlightSquare3->GetComponent<Engine::InputComponent>();
 
-        input4->inputActions.push_back({ fmt::format("Player1MoveLeft") });
-        input4->inputActions.push_back({ fmt::format("Player1MoveRight") });
+        input4->inputActions.push_back({ fmt::format("Player1MoveLeft"), Engine::EInputActionState::JustPressed });
+        input4->inputActions.push_back({ fmt::format("Player1MoveRight"), Engine::EInputActionState::JustPressed });
         entityManager_->AddEntity(std::move(highlightSquare3));
 
         auto highlightSquare4 = std::make_unique<Engine::Entity>();
@@ -73,7 +68,7 @@ namespace Game
         highlightSquare4->AddComponent<GameModeMenuHighlightComponent>().numOfHighlight = 4;
         auto input5 = highlightSquare4->GetComponent<Engine::InputComponent>();
 
-        input5->inputActions.push_back({ fmt::format("Select") });
+        input5->inputActions.push_back({ fmt::format("Select"), Engine::EInputActionState::JustPressed });
         entityManager_->AddEntity(std::move(highlightSquare4));
 
         auto button11 = std::make_unique<Engine::Entity>();
@@ -121,7 +116,7 @@ namespace Game
         return true;
     }
 
-    void GameModeMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState, Engine::GameState gameMode, Engine::GameModeSettings* gameModeSettings)
+    void GameModeMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode, Engine::GameModeSettings* gameModeSettings)
     {
         auto selectionBox = entityManager_->GetAllEntitiesWithComponents<GameModeMenuSelectionComponent, Engine::InputComponent, Engine::TransformComponent>();
         auto menuStuff = entityManager_->GetAllEntitiesWithComponents<GameModeMenuComponent, Engine::TransformComponent>();
@@ -137,7 +132,7 @@ namespace Game
             bool moveRightInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveRight"));
             bool select = Engine::InputManager::IsActionActive(input, fmt::format("Select"));
 
-            if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::GameModeMenu) {
+            if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
                 transform->m_Position.y = transform->m_Position.y - 9000.f;
             }
             if (selected == 4 && transform->m_Position.y == 7500.f) {
@@ -149,7 +144,7 @@ namespace Game
 
             if (select) {
                 if (selected == 4) {
-                    *gameState = Engine::GameState::PlayingLevel;
+                    gameState->m_CurrentState = Engine::GameStates::PlayingLevel;
                     if (highlight->numOfHighlight != 4) {
                         transform->m_Position.y = transform->m_Position.y + 9000.f;
                     }
@@ -160,19 +155,19 @@ namespace Game
             }
 
             if (moveLeftInput) {
-                if (selected == 1 && transform->m_Position.y == -200.f) {
+                if (selected == 1 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
                         gameModeSettings->borders = 1;
                     }
                 }
-                else if (selected == 2 && transform->m_Position.y == -50.f) {
+                else if (selected == 2 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
                         gameModeSettings->bumpers = 1;
                     }
                 }
-                else if (selected == 3 && transform->m_Position.y == 100.f) {
+                else if (selected == 3 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
                         gameModeSettings->difficulty = 1;
@@ -181,19 +176,19 @@ namespace Game
             }
 
             if (moveRightInput) {
-                if (selected == 1 && transform->m_Position.y == -200.f) {
+                if (selected == 1 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
                         gameModeSettings->borders = 2;
                     }
                 }
-                else if (selected == 2 && transform->m_Position.y == -50.f) {
+                else if (selected == 2 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
                         gameModeSettings->bumpers = 2;
                     }
                 }
-                else if (selected == 3 && transform->m_Position.y == 100.f) {
+                else if (selected == 3 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
                         gameModeSettings->difficulty = 2;
@@ -210,18 +205,11 @@ namespace Game
             bool moveUpInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveUp"));
             bool moveDownInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveDown"));
 
-            if (transform->m_Position.y == 9000.f && *gameState == Engine::GameState::GameModeMenu) {
+            if (transform->m_Position.y == 9000.f && gameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
                 transform->m_Position.y = -200.f;
             }
 
-            if (!moveUpInput && !m_isUpKeyReleased) {
-                m_isUpKeyReleased = true;
-            }
-            if (!moveDownInput && !m_isDownKeyReleased) {
-                m_isDownKeyReleased = true;
-            }
-
-            if (moveUpInput && m_isUpKeyReleased) {
+            if (moveUpInput) {
                 if (transform->m_Position.y == -200.f || transform->m_Position.y == -50.f) {
                     transform->m_Position.y = -200.f;
                     selected = 1;
@@ -234,9 +222,8 @@ namespace Game
                     transform->m_Position.y = 100.f;
                     selected = 3;
                 }
-                m_isUpKeyReleased = false;
             }
-            else if (moveDownInput && m_isDownKeyReleased) {
+            else if (moveDownInput) {
                 if (transform->m_Position.y == -50.f) {
                     transform->m_Position.y = 100.f;
                     selected = 3;
@@ -249,10 +236,9 @@ namespace Game
                     transform->m_Position.y = 7500.f;
                     selected = 4;
                 }
-                m_isDownKeyReleased = false;
             }
 
-            if (*gameState != Engine::GameState::GameModeMenu) {
+            if (gameState->m_CurrentState != Engine::GameStates::GameModeMenu) {
                 transform->m_Position.y = 9000.f;
                 selected = 1;
             }
@@ -266,16 +252,16 @@ namespace Game
 
             auto transform = entity->GetComponent<Engine::TransformComponent>();
 
-            if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::GameModeMenu) {
+            if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
                 transform->m_Position.y = transform->m_Position.y - 9000.f;
             }
 
-            if (*gameState != Engine::GameState::GameModeMenu) {
+            if (gameState->m_CurrentState != Engine::GameStates::GameModeMenu) {
                 transform->m_Position.y = transform->m_Position.y + 9000.f;
             }
         }
 
-        if (*gameState != Engine::GameState::GameModeMenu) {
+        if (gameState->m_CurrentState != Engine::GameStates::GameModeMenu) {
             for (auto& entity : highlightBoxes) {
                 auto transform = entity->GetComponent<Engine::TransformComponent>();
                 if (transform->m_Position.y < 7000.f) {

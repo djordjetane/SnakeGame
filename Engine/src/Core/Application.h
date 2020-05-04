@@ -16,7 +16,7 @@ namespace Engine {
         int difficulty;
     };
 
-    enum class GameState {
+    enum class GameStates {
         MainMenu,
         PlayingLevel,
         PlayingInfiniteLevel,
@@ -27,6 +27,10 @@ namespace Engine {
         LevelLost,
         PauseMenu,
         QuitGame
+    };
+
+    struct CurrentGameState {
+        Engine::GameStates m_CurrentState;
     };
 
     class Application
@@ -50,7 +54,7 @@ namespace Engine {
         std::unique_ptr<InputManager> m_InputManager{};
         std::unique_ptr<EntityManager> m_EntityManager{};
         std::unique_ptr<TextureManager> m_TextureManager{};
-        GameState m_GameState{};
+        std::unique_ptr<CurrentGameState> m_CurrentGameState{};
 
     private:
         // To be overridden by the game

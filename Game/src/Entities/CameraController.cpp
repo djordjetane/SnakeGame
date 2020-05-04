@@ -25,7 +25,7 @@ namespace Game
         return !(entityManager_->GetAllEntitiesWithComponent<Engine::CameraComponent>().empty());
     }
 
-    void CameraController::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState)
+    void CameraController::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState)
     {
         auto camera = entityManager_->GetAllEntitiesWithComponent<Engine::CameraComponent>()[0]; // Only one camera        
         auto input = camera->GetComponent<Engine::InputComponent>();
@@ -34,7 +34,7 @@ namespace Game
 
         if (pauseGameInput) 
         {
-            *gameState = Engine::GameState::PauseMenu;
+            gameState->m_CurrentState = Engine::GameStates::PauseMenu;
         }       
     }
 }

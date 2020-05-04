@@ -10,7 +10,7 @@ namespace Game
     private:
         bool m_firstLoad;
 
-        Engine::GameState m_GameMode;
+        Engine::GameStates m_GameMode;
 
         void GameSpecificWindowData() override;
         bool GameSpecificInit() override;

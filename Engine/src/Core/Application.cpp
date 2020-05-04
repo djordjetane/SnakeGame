@@ -51,8 +51,8 @@ namespace Engine {
             return false;
         }
 
-        m_GameState = GameState::MainMenu;
-
+        m_CurrentGameState = std::make_unique<CurrentGameState>();
+        m_CurrentGameState->m_CurrentState = Engine::GameStates::MainMenu;
         // Physics system initialize
         m_PhysicsSystem = std::make_unique<PhysicsSystem>();
         if (!m_PhysicsSystem->Init())
@@ -108,7 +108,7 @@ namespace Engine {
 
             previousFrameTime = frameTime;
 
-            if (m_GameState == GameState::QuitGame) {
+            if (m_CurrentGameState->m_CurrentState == GameStates::QuitGame) {
                 m_Running = false;
             }
         }

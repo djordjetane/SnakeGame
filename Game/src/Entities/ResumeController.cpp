@@ -7,7 +7,7 @@ namespace Game
     bool ResumeScreen::Init(Engine::EntityManager* entityManager_, Engine::Texture* texture_1,
         Engine::Texture* texture_2, Engine::Texture* texture_3, Engine::Texture* texture_4, Engine::Texture* texture_5)
     {
-        ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to Menu::Init()");
+        ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to ResumeScreen::Init()");
 
         time_passed = 0.f;
         auto background = std::make_unique<Engine::Entity>();
@@ -43,52 +43,52 @@ namespace Game
         return true;
     }
 
-    void ResumeScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameState* gameState, Engine::GameState gameMode)
+    void ResumeScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
     {
         time_passed += dt;
         auto resumeComponents = entityManager_->GetAllEntitiesWithComponents<ResumeScreenComponent, Engine::TransformComponent>();
         if (time_passed >= 2) {
-            *gameState = gameMode;
+            gameState->m_CurrentState = gameMode;
         }
         for (auto& entity : resumeComponents)
         {
             auto transform = entity->GetComponent<Engine::TransformComponent>();
             auto resum = entity->GetComponent<ResumeScreenComponent>();
-            if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 5) {
+            if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 5) {
                 transform->m_Position.y = transform->m_Position.y - 9000.f;
             }
             if (time_passed <= 0.5) {
-                if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 3) {
+                if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 3) {
                     transform->m_Position.y = 0.f;
                 }
             }
             else if (time_passed > 0.5 && time_passed <= 1.0) {
-                if (*gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 3) {
+                if (gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 3) {
                     transform->m_Position.y = 9000.f;
                 }
-                if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 2) {
+                if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 2) {
                     transform->m_Position.y = 0.f;
                 }
             }
             else if (time_passed > 1.0 && time_passed <= 1.5) {
-                if (*gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 2) {
+                if (gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 2) {
                     transform->m_Position.y = 9000.f;
                 }
-                if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 1) {
+                if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 1) {
                     transform->m_Position.y = 0.f;
                 }
             }
             else if (time_passed > 1.5) {
-                if (*gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 1) {
+                if (gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 1) {
                     transform->m_Position.y = 9000.f;
                 }
-                if (transform->m_Position.y > 8000.f && *gameState == Engine::GameState::ResumingLevel && resum->numInQueue == 4) {
+                if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 4) {
                     transform->m_Position.y = 0.f;
                 }
             }
 
             if (time_passed >= 2) {
-                if (*gameState != Engine::GameState::ResumingLevel) {
+                if (gameState->m_CurrentState != Engine::GameStates::ResumingLevel) {
                     transform->m_Position.y = 9000.f;
                 }
             }

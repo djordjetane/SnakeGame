@@ -67,7 +67,7 @@ bool Game::GameApp::GameSpecificInit()
     m_GameModeSettings->difficulty = 1;
 
     m_firstLoad = true;
-    m_GameMode = Engine::GameState::PlayingLevel;
+    m_GameMode = Engine::GameStates::PlayingLevel;
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
     m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("black")); 
@@ -79,9 +79,6 @@ bool Game::GameApp::GameSpecificInit()
     // Fruit 
     m_FruitController = std::make_unique<FruitController>(); // Importaint to be after Stadium to be drawn over it
     m_FruitController->Init(m_EntityManager.get(), fruitTextures);    
-
-    // Lvl init TEST: WILL BE MOVED TO GameSpecificUpdate
-    //m_Stadium->InitLvl1(m_EntityManager.get());
 
     //Main Menu
     m_MainMenu = std::make_unique<MainMenu>();
@@ -107,43 +104,43 @@ bool Game::GameApp::GameSpecificInit()
 
 void Game::GameApp::GameSpecificUpdate(float dt)
 {
-    if (m_GameState == Engine::GameState::PlayingLevel) {
+    if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingLevel) {
         if (m_firstLoad) {
             m_Stadium->InitLvl1(m_EntityManager.get());
-            m_GameMode = Engine::GameState::PlayingLevel;
-            m_GameState = Engine::GameState::ResumingLevel;
+            m_GameMode = Engine::GameStates::PlayingLevel;
+            m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
-        m_CameraController->Update(dt, m_EntityManager.get(), &m_GameState);
+        m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
     }
-    else if (m_GameState == Engine::GameState::PlayingInfiniteLevel) {
+    else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingInfiniteLevel) {
         if (m_firstLoad) {
-            m_GameMode = Engine::GameState::PlayingInfiniteLevel;
-            m_GameState = Engine::GameState::ResumingLevel;
+            m_GameMode = Engine::GameStates::PlayingInfiniteLevel;
+            m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
-        m_CameraController->Update(dt, m_EntityManager.get(), &m_GameState);
+        m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
     }
-    else if (m_GameState == Engine::GameState::PauseMenu) {
-        m_PauseMenu->Update(dt, m_EntityManager.get(), &m_GameState, m_GameMode);
-        if (m_GameState == Engine::GameState::MainMenu) {
+    else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
+        m_PauseMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
+        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
         }
     }
-    else if (m_GameState == Engine::GameState::ResumingLevel) {
-        m_ResumeScreen->Update(dt, m_EntityManager.get(), &m_GameState, m_GameMode);
+    else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::ResumingLevel) {
+        m_ResumeScreen->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
     }
-    else if (m_GameState == Engine::GameState::GameModeMenu) {
-        m_GameModeMenu->Update(dt, m_EntityManager.get(), &m_GameState, m_GameMode, m_GameModeSettings.get());
+    else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
+        m_GameModeMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode, m_GameModeSettings.get());
     }
     else {
-        m_MainMenu->Update(dt, m_EntityManager.get(), &m_GameState);
+        m_MainMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
     }
 }
 
