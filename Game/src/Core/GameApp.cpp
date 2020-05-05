@@ -48,6 +48,11 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume_3", "..\\Data\\3.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume_go", "..\\Data\\go.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "selection_border", "..\\Data\\selection_border.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "text_1", "..\\Data\\text_1.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "text_2", "..\\Data\\text_2.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "text_3", "..\\Data\\text_3.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "back_button", "..\\Data\\back_button.png");
+
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit1", "..\\Data\\fruit1.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit2", "..\\Data\\fruit2.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit3", "..\\Data\\fruit3.png");
@@ -89,7 +94,8 @@ bool Game::GameApp::GameSpecificInit()
     m_GameModeMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("selection_border"), m_TextureManager->GetTexture("white"),
         m_TextureManager->GetTexture("yes"), m_TextureManager->GetTexture("no"), m_TextureManager->GetTexture("easy"), 
         m_TextureManager->GetTexture("hard"), m_TextureManager->GetTexture("bounce_off"), m_TextureManager->GetTexture("death"), 
-        m_TextureManager->GetTexture("black"), m_TextureManager->GetTexture("start"));
+        m_TextureManager->GetTexture("black"), m_TextureManager->GetTexture("start"), m_TextureManager->GetTexture("text_1"), 
+        m_TextureManager->GetTexture("text_2"), m_TextureManager->GetTexture("text_3"), m_TextureManager->GetTexture("back_button"));
     //Pause Menu
     m_PauseMenu = std::make_unique<PauseMenu>();
     m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("resume"), m_TextureManager->GetTexture("quit"),
