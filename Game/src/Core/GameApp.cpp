@@ -67,8 +67,8 @@ bool Game::GameApp::GameSpecificInit()
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit5"));
     
     m_GameModeSettings = std::make_unique<Engine::GameModeSettings>();
-    m_GameModeSettings->borders = 1;
-    m_GameModeSettings->bumpers = 1;
+    m_GameModeSettings->areBordersDeath = true;
+    m_GameModeSettings->areBumpersDeath = false;
     m_GameModeSettings->difficulty = 1;
 
     m_firstLoad = true;
@@ -117,7 +117,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
-        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_GameMode);
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
     }
@@ -127,12 +127,13 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
-        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_GameMode);
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
         m_PauseMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());

@@ -210,13 +210,13 @@ namespace Game
                 if (selected == 1 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
-                        gameModeSettings->borders = 1;
+                        gameModeSettings->areBordersDeath = true;
                     }
                 }
                 else if (selected == 2 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
-                        gameModeSettings->bumpers = 1;
+                        gameModeSettings->areBumpersDeath = false;
                     }
                 }
                 else if (selected == 3 && highlight->numOfHighlight == selected) {
@@ -231,13 +231,13 @@ namespace Game
                 if (selected == 1 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
-                        gameModeSettings->borders = 2;
+                        gameModeSettings->areBordersDeath = false;
                     }
                 }
                 else if (selected == 2 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
-                        gameModeSettings->bumpers = 2;
+                        gameModeSettings->areBumpersDeath = true;
                     }
                 }
                 else if (selected == 3 && highlight->numOfHighlight == selected) {
