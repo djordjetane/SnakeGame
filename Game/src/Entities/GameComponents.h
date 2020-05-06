@@ -87,7 +87,16 @@ namespace Game
     struct DeathScreenComponent : public Engine::Component {
 
     };
+
     struct DeathSelectComponent : public Engine::Component {
+
+    };
+
+    struct WinScreenSelectionComponent : public Engine::Component {
+
+    };
+
+    struct WinScreenComponent : public Engine::Component{
 
     };
 

@@ -6,7 +6,7 @@ namespace Game
 {
     bool DeathScreen::Init(Engine::EntityManager* entityManager_, Engine::TextureManager* textureManager_)
     {
-        ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to ResumeScreen::Init()");
+        ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to DeathScreen::Init()");
 
         time_passed = 0.f;
         auto background = std::make_unique<Engine::Entity>();

@@ -28,6 +28,7 @@ namespace Game
         std::unique_ptr<ResumeScreen> m_ResumeScreen{};
         std::unique_ptr<GameModeMenu> m_GameModeMenu{};
         std::unique_ptr<DeathScreen> m_DeathScreen{};
+        std::unique_ptr<VictoryScreen> m_VictoryScreen{};
     };
 
 }
