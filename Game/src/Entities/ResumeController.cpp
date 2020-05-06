@@ -46,6 +46,7 @@ namespace Game
     {
         time_passed += dt;
         auto resumeComponents = entityManager_->GetAllEntitiesWithComponents<ResumeScreenComponent, Engine::TransformComponent>();
+
         if (time_passed >= 2) {
             gameState->m_CurrentState = gameMode;
         }

@@ -52,6 +52,9 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "text_2", "..\\Data\\text_2.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "text_3", "..\\Data\\text_3.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "back_button", "..\\Data\\back_button.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "you_died", "..\\Data\\you_died.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "stripe", "..\\Data\\stripe.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "retry", "..\\Data\\retry.png");
 
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit1", "..\\Data\\fruit1.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit2", "..\\Data\\fruit2.png");
@@ -97,6 +100,9 @@ bool Game::GameApp::GameSpecificInit()
     //Resume Screen
     m_ResumeScreen = std::make_unique<ResumeScreen>();
     m_ResumeScreen->Init(m_EntityManager.get(), m_TextureManager.get());
+    //Death Screen
+    m_DeathScreen = std::make_unique<DeathScreen>();
+    m_DeathScreen->Init(m_EntityManager.get(), m_TextureManager.get());
 
     return true;
 }
@@ -113,6 +119,10 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
+        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
+            m_Stadium->Destroy(m_EntityManager.get());
+            m_firstLoad = true;
+        }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingInfiniteLevel) {
         if (m_firstLoad) {
@@ -138,6 +148,14 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
         m_GameModeMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode, m_GameModeSettings.get());
+    }
+    else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
+        m_DeathScreen->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
+        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
+            m_PlayerController->ResetSnake(m_EntityManager.get());
+            m_Stadium->Destroy(m_EntityManager.get());
+            m_firstLoad = true;
+        }
     }
     else {
         m_MainMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());

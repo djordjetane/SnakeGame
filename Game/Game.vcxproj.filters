@@ -48,6 +48,9 @@
     <ClInclude Include="src\Entities\GameModeController.h">
       <Filter>src\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="src\Entities\DeathScreenController.h">
+      <Filter>src\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\precomp.cpp">
@@ -78,6 +81,9 @@
       <Filter>src\Entities</Filter>
     </ClCompile>
     <ClCompile Include="src\Entities\GameModeController.cpp">
+      <Filter>src\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entities\DeathScreenController.cpp">
       <Filter>src\Entities</Filter>
     </ClCompile>
   </ItemGroup>

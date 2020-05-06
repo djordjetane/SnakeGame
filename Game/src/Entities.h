@@ -9,3 +9,4 @@
 #include "Entities\PauseMenuController.h"
 #include "Entities\ResumeController.h"
 #include "Entities\GameModeController.h"
+#include "Entities\DeathScreenController.h"

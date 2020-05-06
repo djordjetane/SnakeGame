@@ -83,6 +83,13 @@ namespace Game
     {
         int numOfHighlight = 1;
     };
+    
+    struct DeathScreenComponent : public Engine::Component {
+
+    };
+    struct DeathSelectComponent : public Engine::Component {
+
+    };
 
     struct GridComponent : public Engine::Component
     {

@@ -76,6 +76,11 @@ namespace Engine
         bool m_FlipVertical{ false };
     };
 
+    struct AlphaComponent : public Component
+    {
+        uint8_t m_Alpha{ 255 };
+    };
+
     struct PlayerComponent : public Component
     {
         float m_PlayerSpeed = 1.0f;

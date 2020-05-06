@@ -82,6 +82,7 @@ namespace Engine
     {
         auto transform = r->GetComponent<TransformComponent>();
         auto sprite = r->GetComponent<SpriteComponent>();
+        auto alpha = r->GetComponent<AlphaComponent>();
 
         vec2 size = transform->m_Size;
         if (size == vec2{ 0.f, 0.f }) // Use size of texture if size of entity isn't set
@@ -90,6 +91,10 @@ namespace Engine
             SDL_QueryTexture(sprite->m_Image->m_Texture, NULL, NULL, &w, &h);
             size.x = static_cast<float>(w);
             size.y = static_cast<float>(h);
+        }
+
+        if (alpha != nullptr) {
+            SDL_SetTextureAlphaMod(sprite->m_Image->m_Texture, alpha->m_Alpha);
         }
 
         if (IsInsideScreen(transform->m_Position, vec2(size.x, size.y), camera))
