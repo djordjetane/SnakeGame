@@ -11,8 +11,8 @@ namespace Engine {
     class TextureManager;
 
     struct GameModeSettings {
-        int borders;
-        int bumpers;
+        bool areBordersDeath;
+        bool areBumpersDeath;
         int difficulty;
     };
 

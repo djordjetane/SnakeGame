@@ -51,8 +51,10 @@ namespace Engine {
             return false;
         }
 
+        //Game State initialize
         m_CurrentGameState = std::make_unique<CurrentGameState>();
         m_CurrentGameState->m_CurrentState = Engine::GameStates::MainMenu;
+        
         // Physics system initialize
         m_PhysicsSystem = std::make_unique<PhysicsSystem>();
         if (!m_PhysicsSystem->Init())
