@@ -130,7 +130,7 @@ namespace Game
                 //if snake hit itself reset game
                 if (entityCollided->HasComponent<BodyComponent>()) {
                     ResetSnake(entityManager_);
-                    gameMode = Engine::GameStates::LevelLost;
+                    gameState->m_CurrentState = Engine::GameStates::LevelLost;
                     return;
                 }
 
@@ -142,7 +142,7 @@ namespace Game
                     //if bumpers are death reset snake
                     if (gameModeSettings->areBumpersDeath) {
                         ResetSnake(entityManager_);
-                        gameMode = Engine::GameStates::LevelLost;
+                        gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
                     }
                     //else move snake in appropriate direciton 
@@ -272,7 +272,7 @@ namespace Game
                 if (transform->m_Position.x < -620.f){
                     if (gameModeSettings->areBordersDeath && gameMode==Engine::GameStates::PlayingLevel) {
                         ResetSnake(entityManager_);
-                        gameMode = Engine::GameStates::LevelLost;
+                        gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
                     }
                     else {
@@ -283,7 +283,7 @@ namespace Game
                 else if(transform->m_Position.x > 620.f){
                     if (gameModeSettings->areBordersDeath && gameMode == Engine::GameStates::PlayingLevel) {
                         ResetSnake(entityManager_);
-                        gameMode = Engine::GameStates::LevelLost;
+                        gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
                     }
                     else {
@@ -294,7 +294,7 @@ namespace Game
                 else if (transform->m_Position.y < -340.f){
                     if (gameModeSettings->areBordersDeath && gameMode == Engine::GameStates::PlayingLevel) {
                         ResetSnake(entityManager_);
-                        gameMode = Engine::GameStates::LevelLost;
+                        gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
                     }
                     else {
@@ -305,7 +305,7 @@ namespace Game
                 else if (transform->m_Position.y > 340.f){
                     if (gameModeSettings->areBordersDeath && gameMode == Engine::GameStates::PlayingLevel) {
                         ResetSnake(entityManager_);
-                        gameMode = Engine::GameStates::LevelLost;
+                        gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
                     }
                     else {
