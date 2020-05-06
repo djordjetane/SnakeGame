@@ -87,23 +87,16 @@ bool Game::GameApp::GameSpecificInit()
 
     //Main Menu
     m_MainMenu = std::make_unique<MainMenu>();
-    m_MainMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("story_mode"), m_TextureManager->GetTexture("infinite_runner") 
-        ,m_TextureManager->GetTexture("quit"),m_TextureManager->GetTexture("white"), m_TextureManager->GetTexture("black"));
+    m_MainMenu->Init(m_EntityManager.get(), m_TextureManager.get());
     //Game Mode Menu
     m_GameModeMenu = std::make_unique<GameModeMenu>();
-    m_GameModeMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("selection_border"), m_TextureManager->GetTexture("white"),
-        m_TextureManager->GetTexture("yes"), m_TextureManager->GetTexture("no"), m_TextureManager->GetTexture("easy"), 
-        m_TextureManager->GetTexture("hard"), m_TextureManager->GetTexture("bounce_off"), m_TextureManager->GetTexture("death"), 
-        m_TextureManager->GetTexture("black"), m_TextureManager->GetTexture("start"), m_TextureManager->GetTexture("text_1"), 
-        m_TextureManager->GetTexture("text_2"), m_TextureManager->GetTexture("text_3"), m_TextureManager->GetTexture("back_button"));
+    m_GameModeMenu->Init(m_EntityManager.get(), m_TextureManager.get());
     //Pause Menu
     m_PauseMenu = std::make_unique<PauseMenu>();
-    m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager->GetTexture("resume"), m_TextureManager->GetTexture("quit"),
-        m_TextureManager->GetTexture("white"), m_TextureManager->GetTexture("transparent"), m_TextureManager->GetTexture("main_menu"));
+    m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager.get());
     //Resume Screen
     m_ResumeScreen = std::make_unique<ResumeScreen>();
-    m_ResumeScreen->Init(m_EntityManager.get(), m_TextureManager->GetTexture("resume_1"), m_TextureManager->GetTexture("resume_2"),
-        m_TextureManager->GetTexture("resume_3"), m_TextureManager->GetTexture("resume_go"), m_TextureManager->GetTexture("transparent"));
+    m_ResumeScreen->Init(m_EntityManager.get(), m_TextureManager.get());
 
     return true;
 }
