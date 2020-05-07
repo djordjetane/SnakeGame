@@ -12,8 +12,7 @@ level 2:
 80 x 160
 80 x 80
 
-level c++:
--dimenzije nisu deljive sa 40
+level c++: // Dimensions will be changed in future
 100x500
 200x100
 200x100
