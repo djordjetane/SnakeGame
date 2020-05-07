@@ -24,6 +24,8 @@ bool Game::GameApp::GameSpecificInit()
     m_CameraController = std::make_unique<CameraController>();
     m_CameraController->Init(m_EntityManager.get());
 
+    srand(NULL);
+
     // TestImage
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "grass", "..\\Data\\grass.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "snakeBody", "..\\Data\\snakebody.png");
@@ -57,6 +59,7 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "retry", "..\\Data\\retry.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "win_screen", "..\\Data\\win_screen.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "next_level", "..\\Data\\next_level.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall", "..\\Data\\wall.png");
 
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit1", "..\\Data\\fruit1.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit2", "..\\Data\\fruit2.png");
@@ -80,7 +83,7 @@ bool Game::GameApp::GameSpecificInit()
     m_GameMode = Engine::GameStates::PlayingLevel;
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
-    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("black")); 
+    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("wall")); 
 
     // Player
     m_PlayerController = std::make_unique<PlayerController>();
