@@ -9,6 +9,8 @@ namespace Engine {
     class InputManager;
     class EntityManager;
     class TextureManager;
+    class SoundHandler;
+    class SoundManager;
 
     struct GameModeSettings {
         bool areBordersDeath;
@@ -55,7 +57,8 @@ namespace Engine {
         std::unique_ptr<EntityManager> m_EntityManager{};
         std::unique_ptr<TextureManager> m_TextureManager{};
         std::unique_ptr<CurrentGameState> m_CurrentGameState{};
-
+        std::unique_ptr<SoundHandler> m_SoundHandler{};
+        std::unique_ptr<SoundManager> m_SoundManager{};
     private:
         // To be overridden by the game
         virtual void GameSpecificWindowData() = 0;

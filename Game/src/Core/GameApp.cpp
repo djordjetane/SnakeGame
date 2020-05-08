@@ -67,6 +67,8 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit4", "..\\Data\\fruit4.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit5", "..\\Data\\fruit5.png");
 
+    m_SoundManager->CreateSound("you_died_sound", "..\\Data\\Sounds\\you_died_sound.ogg");
+
     std::vector<Engine::Texture*> fruitTextures{};
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit1"));
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit2"));
@@ -162,7 +164,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_GameModeMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode, m_GameModeSettings.get());
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
-        m_DeathScreen->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
+        m_DeathScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());

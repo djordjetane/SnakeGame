@@ -55,6 +55,9 @@
     <Filter Include="src\PhysicsSystem">
       <UniqueIdentifier>{052e6dc8-81a8-4292-8613-324c90345e5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Sound">
+      <UniqueIdentifier>{a8bb72ff-cbf2-46c5-b274-20fff5105419}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Logger\Logger.cpp">
@@ -99,6 +102,11 @@
     <ClCompile Include="src\Physics\PhysicsSystem.cpp">
       <Filter>src\PhysicsSystem</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sound\SoundHandler.cpp" />
+    <ClCompile Include="src\Sound\Sound.cpp">
+      <Filter>src\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sound\SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\spdlog\async.h">
@@ -1049,6 +1057,11 @@
     <ClInclude Include="src\Physics\PhysicsSystem.h">
       <Filter>src\PhysicsSystem</Filter>
     </ClInclude>
+    <ClInclude Include="src\Sound\SoundHandler.h" />
+    <ClInclude Include="src\Sound\Sound.h">
+      <Filter>src\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sound\SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="extern\spdlog\LICENSE">

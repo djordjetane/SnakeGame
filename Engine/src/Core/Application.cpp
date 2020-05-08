@@ -9,6 +9,9 @@
 #include "Render/WindowData.h"
 #include "Render/TextureManager.h"
 #include "Physics/PhysicsSystem.h"
+#include "Sound/Sound.h"
+#include "Sound/SoundHandler.h"
+#include "Sound/SoundManager.h"
 
 #include <SDL.h>
 #undef main
@@ -51,6 +54,16 @@ namespace Engine {
             return false;
         }
 
+        //Sound Handler initialize
+        m_SoundHandler = std::make_unique<SoundHandler>();
+        if (!m_SoundHandler->Init())
+        {
+            LOG_CRITICAL("Failed to initialize SoundHandler");
+            return false;
+        }
+
+        m_SoundManager = std::make_unique<SoundManager>();
+
         //Game State initialize
         m_CurrentGameState = std::make_unique<CurrentGameState>();
         m_CurrentGameState->m_CurrentState = Engine::GameStates::MainMenu;
@@ -78,6 +91,7 @@ namespace Engine {
 
         GameSpecificShutdown();
 
+        m_SoundHandler->Shutdown();
         m_RenderSystem->Shutdown();
         m_RenderSystem.reset();
 

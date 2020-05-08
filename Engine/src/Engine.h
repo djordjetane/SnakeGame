@@ -17,3 +17,8 @@
 #include "Render/RenderSystem.h"
 #include "Render/Texture.h"
 #include "Render/TextureManager.h"
+
+#include "Sound/Sound.h"
+#include "Sound/SoundHandler.h"
+#include "Sound/SoundManager.h"
+
