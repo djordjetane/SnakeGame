@@ -10,6 +10,7 @@
 #include "Render/TextureManager.h"
 #include "Physics/PhysicsSystem.h"
 #include "Sound/Sound.h"
+#include "Sound/Music.h"
 #include "Sound/SoundHandler.h"
 #include "Sound/SoundManager.h"
 
@@ -91,10 +92,15 @@ namespace Engine {
 
         GameSpecificShutdown();
 
-        m_SoundHandler->Shutdown();
-        m_SoundHandler.reset();
+        
         m_RenderSystem->Shutdown();
         m_RenderSystem.reset();
+
+        m_SoundManager->ShutDown();
+        m_SoundManager.reset();
+
+        m_SoundHandler->Shutdown();
+        m_SoundHandler.reset();
 
         return true;
     }

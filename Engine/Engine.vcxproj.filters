@@ -107,6 +107,7 @@
       <Filter>src\Sound</Filter>
     </ClCompile>
     <ClCompile Include="src\Sound\SoundManager.cpp" />
+    <ClCompile Include="src\Sound\Music.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\spdlog\async.h">
@@ -1062,6 +1063,7 @@
       <Filter>src\Sound</Filter>
     </ClInclude>
     <ClInclude Include="src\Sound\SoundManager.h" />
+    <ClInclude Include="src\Sound\Music.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="extern\spdlog\LICENSE">

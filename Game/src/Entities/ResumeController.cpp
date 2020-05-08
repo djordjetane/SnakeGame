@@ -42,13 +42,17 @@ namespace Game
         return true;
     }
 
-    void ResumeScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
+    void ResumeScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
     {
         time_passed += dt;
         auto resumeComponents = entityManager_->GetAllEntitiesWithComponents<ResumeScreenComponent, Engine::TransformComponent>();
 
         if (time_passed >= 2) {
             gameState->m_CurrentState = gameMode;
+            if (soundManager_->ResumeMusic() != 1)
+            {
+                soundManager_->PlayMusic("play_music", -1);
+            }
         }
         for (auto& entity : resumeComponents)
         {

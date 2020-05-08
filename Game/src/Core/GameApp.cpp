@@ -70,7 +70,8 @@ bool Game::GameApp::GameSpecificInit()
     m_SoundManager->CreateSound("you_died_sound", "..\\Data\\Sounds\\you_died_sound.ogg");
     m_SoundManager->CreateSound("click", "..\\Data\\Sounds\\click.wav");
     m_SoundManager->CreateSound("select", "..\\Data\\Sounds\\select.wav");
-
+    m_SoundManager->CreateMusic("main_menu_music", "..\\Data\\Sounds\\menu_music.mp3");
+    m_SoundManager->CreateMusic("play_music", "..\\Data\\Sounds\\play_music.mp3");
 
     std::vector<Engine::Texture*> fruitTextures{};
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit1"));
@@ -117,6 +118,8 @@ bool Game::GameApp::GameSpecificInit()
     m_VictoryScreen = std::make_unique<VictoryScreen>();
     m_VictoryScreen->Init(m_EntityManager.get(), m_TextureManager.get());
 
+
+    m_SoundManager->PlayMusic("main_menu_music", -1);
     return true;
 }
 
@@ -131,7 +134,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         }
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
-        m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
+        m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
@@ -149,7 +152,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         }
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
         m_FruitController->Update(dt, m_EntityManager.get());
-        m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
+        m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
         m_PauseMenu->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
@@ -161,7 +164,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::ResumingLevel) {
-        m_ResumeScreen->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
+        m_ResumeScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
         m_GameModeMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_SoundManager.get(), m_GameMode, m_GameModeSettings.get());

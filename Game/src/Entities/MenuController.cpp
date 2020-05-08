@@ -74,9 +74,11 @@ namespace Game
                 else if (transform->m_Position.y == 0.f) {
                     gameState->m_CurrentState = Engine::GameStates::PlayingInfiniteLevel;
                     soundManager_->PlaySound("select", 0);
+                    soundManager_->StopMusic();
                     transform->m_Position.y = 9000.f;
                 }
                 else {
+                    soundManager_->StopMusic();
                     gameState->m_CurrentState = Engine::GameStates::QuitGame;
                 }
             }

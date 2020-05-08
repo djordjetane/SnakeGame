@@ -184,6 +184,7 @@ namespace Game
             if (select) {
                 if (selected == 4) {
                     gameState->m_CurrentState = Engine::GameStates::PlayingLevel;
+                    soundManager_->StopMusic();
                     soundManager_->PlaySound("select", 0);
                     if (!(highlight->numOfHighlight == 4 || highlight->numOfHighlight == 5)) {
                         transform->m_Position.y = transform->m_Position.y + 9000.f;

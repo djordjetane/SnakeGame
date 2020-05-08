@@ -59,6 +59,7 @@ namespace Game
     void DeathScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
     {
         if (time_passed == 0.f) {
+            soundManager_->StopMusic();
             soundManager_->PlaySound("you_died_sound", 0);
         }
 
@@ -105,10 +106,12 @@ namespace Game
             if (select) {
                 if (transform->m_Position.x == -200.f) {
                     gameState->m_CurrentState = gameMode;
+                    soundManager_->PlayMusic("play_music", -1);
                     soundManager_->PlaySound("select", 0);
                 }
                 else if (transform->m_Position.x == 200.f) {
                     gameState->m_CurrentState = Engine::GameStates::MainMenu;
+                    soundManager_->PlayMusic("main_menu_music", -1);
                     soundManager_->PlaySound("select", 0);
                 }
             }
