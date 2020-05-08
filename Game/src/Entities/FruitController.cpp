@@ -1,4 +1,5 @@
 #include "precomp.h"
+#include "ScoreController.h"
 #include "FruitController.h"
 
 #include "GameComponents.h"
@@ -24,7 +25,7 @@ namespace Game {
 	bool FruitController::Init(Engine::EntityManager* entityManager_, std::vector<Engine::Texture*>& textures_)
 	{
 		ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to FruitController::Init()");
-		ASSERT(textures_.size() != 0, "Must pass texture to FruitController::Init()");
+		ASSERT(textures_.size() != 0, "Must pass texture to FruitController::Init()");		
 
 		for (auto& texture : textures_)
 		{
@@ -89,6 +90,9 @@ namespace Game {
 					transform->m_Position.x = x;
 					transform->m_Position.y = y;
 					fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
+
+					auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
+					scoreEntity->GetComponent<ScoreComponent>()->m_Score++;
 				}
 
 				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())

@@ -119,5 +119,10 @@ namespace Game
     {
 
     };
+
+    struct ScoreComponent : public Engine::Component
+    {
+        int m_Score;
+    };
    
 }

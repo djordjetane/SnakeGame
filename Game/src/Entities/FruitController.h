@@ -15,6 +15,6 @@ namespace Game {
 		void Update(float dt, Engine::EntityManager* entityManager_);
 	private:		
 		int m_superChange;
-		std::vector<Engine::Texture*> m_textures;
+		std::vector<Engine::Texture*> m_textures;		
 	};
 }

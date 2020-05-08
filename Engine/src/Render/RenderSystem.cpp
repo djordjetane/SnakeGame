@@ -6,6 +6,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 namespace Engine
 {
@@ -22,6 +23,12 @@ namespace Engine
         if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) < 0)
         {
             LOG_CRITICAL("Unable to initialize SDL_Image");
+            return false;
+        }
+
+        if (TTF_Init() < 0)
+        {
+            LOG_CRITICAL("Unable to initialize TTF. TTF error: {}", TTF_GetError());
             return false;
         }
 
@@ -44,6 +51,7 @@ namespace Engine
         LOG_INFO("Shutting down RenderSystem");
 
         m_Renderer.reset();
+        TTF_Quit();
         SDL_Quit();
 
         return true;

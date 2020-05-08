@@ -11,3 +11,4 @@
 #include "Entities\GameModeController.h"
 #include "Entities\DeathScreenController.h"
 #include "Entities\VictoryController.h"
+#include "Entities\ScoreController.h"
