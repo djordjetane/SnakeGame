@@ -68,6 +68,9 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit5", "..\\Data\\fruit5.png");
 
     m_SoundManager->CreateSound("you_died_sound", "..\\Data\\Sounds\\you_died_sound.ogg");
+    m_SoundManager->CreateSound("click", "..\\Data\\Sounds\\click.wav");
+    m_SoundManager->CreateSound("select", "..\\Data\\Sounds\\select.wav");
+
 
     std::vector<Engine::Texture*> fruitTextures{};
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit1"));
@@ -149,7 +152,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_CameraController->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
-        m_PauseMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
+        m_PauseMenu->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_PlayerController->ResetSnake(m_EntityManager.get());
@@ -161,7 +164,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_ResumeScreen->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
-        m_GameModeMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode, m_GameModeSettings.get());
+        m_GameModeMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_SoundManager.get(), m_GameMode, m_GameModeSettings.get());
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
         m_DeathScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
@@ -180,7 +183,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         }
     }
     else {
-        m_MainMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get());
+        m_MainMenu->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
     }
 }
 

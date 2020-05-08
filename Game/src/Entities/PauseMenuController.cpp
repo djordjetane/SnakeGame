@@ -47,7 +47,7 @@ namespace Game
         return true;
     }
 
-    void PauseMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
+    void PauseMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
     {
         auto selectionBox = entityManager_->GetAllEntitiesWithComponents<PauseSelectionComponent, Engine::InputComponent, Engine::TransformComponent>();
         auto menuStuff = entityManager_->GetAllEntitiesWithComponents<PauseMenuComponent, Engine::TransformComponent>();
@@ -67,10 +67,12 @@ namespace Game
             if (select) {
                 if (transform->m_Position.y == -100.f) {
                     gameState->m_CurrentState = Engine::GameStates::ResumingLevel;
+                    soundManager_->PlaySound("select", 0);
                     transform->m_Position.y = 9000.f;
                 }
                 else if (transform->m_Position.y == 0.f) {
                     gameState->m_CurrentState = Engine::GameStates::MainMenu;
+                    soundManager_->PlaySound("select", 0);
                     transform->m_Position.y = 9000.f;
                 }
                 else {
@@ -80,20 +82,24 @@ namespace Game
 
 
             if (moveUpInput ) {
-                if (transform->m_Position.y == -100.f || transform->m_Position.y == 0.f) {
+                if (transform->m_Position.y == 0.f) {
                     transform->m_Position.y = -100.f;
+                    soundManager_->PlaySound("click", 0);
                 }
                 else if (transform->m_Position.y == 100.f) {
                     transform->m_Position.y = 0.f;
+                    soundManager_->PlaySound("click", 0);
                 }
 
             }
             else if (moveDownInput) {
-                if (transform->m_Position.y == 100.f || transform->m_Position.y == 0.f) {
+                if (transform->m_Position.y == 0.f) {
                     transform->m_Position.y = 100.f;
+                    soundManager_->PlaySound("click", 0);
                 }
                 else if (transform->m_Position.y == -100.f) {
                     transform->m_Position.y = 0.f;
+                    soundManager_->PlaySound("click", 0);
                 }
             }
 

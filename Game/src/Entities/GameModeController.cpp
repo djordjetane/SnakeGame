@@ -147,7 +147,7 @@ namespace Game
         return true;
     }
 
-    void GameModeMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode, Engine::GameModeSettings* gameModeSettings)
+    void GameModeMenu::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState, Engine::SoundManager* soundManager_, Engine::GameStates gameMode, Engine::GameModeSettings* gameModeSettings)
     {
         auto selectionBox = entityManager_->GetAllEntitiesWithComponents<GameModeMenuSelectionComponent, Engine::InputComponent, Engine::TransformComponent>();
         auto menuStuff = entityManager_->GetAllEntitiesWithComponents<GameModeMenuComponent, Engine::TransformComponent>();
@@ -184,6 +184,7 @@ namespace Game
             if (select) {
                 if (selected == 4) {
                     gameState->m_CurrentState = Engine::GameStates::PlayingLevel;
+                    soundManager_->PlaySound("select", 0);
                     if (!(highlight->numOfHighlight == 4 || highlight->numOfHighlight == 5)) {
                         transform->m_Position.y = transform->m_Position.y + 9000.f;
                     }
@@ -193,6 +194,7 @@ namespace Game
                 }
                 if (selected == 5) {
                     gameState->m_CurrentState = Engine::GameStates::MainMenu;
+                    soundManager_->PlaySound("select", 0);
                     if (!(highlight->numOfHighlight == 4 || highlight->numOfHighlight == 5)) {
                         transform->m_Position.y = transform->m_Position.y + 9000.f;
                     }
@@ -206,18 +208,21 @@ namespace Game
                 if (selected == 1 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
+                        soundManager_->PlaySound("select", 0);
                         gameModeSettings->areBordersDeath = true;
                     }
                 }
                 else if (selected == 2 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
+                        soundManager_->PlaySound("select", 0);
                         gameModeSettings->areBumpersDeath = false;
                     }
                 }
                 else if (selected == 3 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == 140.f) {
                         transform->m_Position.x = -140.f;
+                        soundManager_->PlaySound("select", 0);
                         gameModeSettings->difficulty = 1;
                     }
                 }
@@ -227,18 +232,21 @@ namespace Game
                 if (selected == 1 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
+                        soundManager_->PlaySound("select", 0);
                         gameModeSettings->areBordersDeath = false;
                     }
                 }
                 else if (selected == 2 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
+                        soundManager_->PlaySound("select", 0);
                         gameModeSettings->areBumpersDeath = true;
                     }
                 }
                 else if (selected == 3 && highlight->numOfHighlight == selected) {
                     if (transform->m_Position.x == -140.f) {
                         transform->m_Position.x = 140.f;
+                        soundManager_->PlaySound("select", 0);
                         gameModeSettings->difficulty = 2;
                     }
                 }
@@ -260,36 +268,44 @@ namespace Game
             if (moveUpInput) {
                 if (transform->m_Position.y == -40.f) {
                     transform->m_Position.y = -200.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 1;
                 }
                 else if (transform->m_Position.y == 120.f) {
                     transform->m_Position.y = -40.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 2;
                 }
                 else if (transform->m_Position.y == 7500.f) {
                     transform->m_Position.y = 120.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 3;
                 }
                 else if (transform->m_Position.y == -200.f) {
                     transform->m_Position.y = 7600.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 5;
                 }
             }
             else if (moveDownInput) {
                 if (transform->m_Position.y == -40.f) {
                     transform->m_Position.y = 120.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 3;
                 }
                 else if (transform->m_Position.y == -200.f) {
                     transform->m_Position.y = -40.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 2;
                 }
                 else if (transform->m_Position.y == 120.f) {
                     transform->m_Position.y = 7500.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 4;
                 }
                 else if (transform->m_Position.y == 7600.f) {
                     transform->m_Position.y = -200.f;
+                    soundManager_->PlaySound("click", 0);
                     selected = 1;
                 }
             }

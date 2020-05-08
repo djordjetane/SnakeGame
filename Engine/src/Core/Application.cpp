@@ -92,6 +92,7 @@ namespace Engine {
         GameSpecificShutdown();
 
         m_SoundHandler->Shutdown();
+        m_SoundHandler.reset();
         m_RenderSystem->Shutdown();
         m_RenderSystem.reset();
 

@@ -88,19 +88,28 @@ namespace Game
             }
 
             if (moveLeftInput) {
-               transform->m_Position.x = -200.f;
+                if (transform->m_Position.x == 200.f) {
+                    transform->m_Position.x = -200.f;
+                    soundManager_->PlaySound("click", 0);
+                }
+               
             }
 
             if (moveRightInput) {
-                transform->m_Position.x = 200.f;
+                if (transform->m_Position.x == -200.f) {
+                    transform->m_Position.x = 200.f;
+                    soundManager_->PlaySound("click", 0);
+                }
             }
 
             if (select) {
                 if (transform->m_Position.x == -200.f) {
                     gameState->m_CurrentState = gameMode;
+                    soundManager_->PlaySound("select", 0);
                 }
                 else if (transform->m_Position.x == 200.f) {
                     gameState->m_CurrentState = Engine::GameStates::MainMenu;
+                    soundManager_->PlaySound("select", 0);
                 }
             }
 
