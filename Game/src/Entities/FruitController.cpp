@@ -69,7 +69,7 @@ namespace Game {
 	// ********************************
 	// * Updating state for new frame *
 	// ********************************
-	void FruitController::Update(float dt, Engine::EntityManager* entityManager_)
+	void FruitController::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_)
 	{
 
 		LOG_INFO("Current time: " + std::to_string(dt));
@@ -93,6 +93,7 @@ namespace Game {
 
 					auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
 					scoreEntity->GetComponent<ScoreComponent>()->m_Score++;
+					soundManager_->PlaySound("eat", 0);
 				}
 
 				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())
@@ -137,6 +138,7 @@ namespace Game {
 				{
 					m_superChange = 391;
 					entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = true;
+					soundManager_->PlaySound("super_fruit", 0);
 				}
 
 				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())

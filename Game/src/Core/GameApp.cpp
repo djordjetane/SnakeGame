@@ -72,8 +72,14 @@ bool Game::GameApp::GameSpecificInit()
     m_SoundManager->CreateSound("you_died_sound", "..\\Data\\Sounds\\you_died_sound.ogg");
     m_SoundManager->CreateSound("click", "..\\Data\\Sounds\\click.wav");
     m_SoundManager->CreateSound("select", "..\\Data\\Sounds\\select.wav");
+    m_SoundManager->CreateSound("count", "..\\Data\\Sounds\\count.ogg");
+    m_SoundManager->CreateSound("go", "..\\Data\\Sounds\\go.ogg");
+    m_SoundManager->CreateSound("eat", "..\\Data\\Sounds\\eat.ogg");
+    m_SoundManager->CreateSound("super_fruit", "..\\Data\\Sounds\\super_fruit.ogg");
+
     m_SoundManager->CreateMusic("main_menu_music", "..\\Data\\Sounds\\menu_music.mp3");
     m_SoundManager->CreateMusic("play_music", "..\\Data\\Sounds\\play_music.mp3");
+    
 
     std::vector<Engine::Texture*> fruitTextures{};
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit1"));
@@ -139,7 +145,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_firstLoad = false;
         }
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
-        m_FruitController->Update(dt, m_EntityManager.get());
+        m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
             m_ScoreController->RestartScore();
@@ -159,7 +165,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_firstLoad = false;
         }
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
-        m_FruitController->Update(dt, m_EntityManager.get());
+        m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
