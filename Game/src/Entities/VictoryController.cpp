@@ -43,7 +43,7 @@ namespace Game
         return true;
     }
 
-    void VictoryScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
+    void VictoryScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
     {
 
         auto winComponents = entityManager_->GetAllEntitiesWithComponents<WinScreenComponent, Engine::TransformComponent>();
@@ -63,18 +63,24 @@ namespace Game
 
             if (moveLeftInput) {
                 transform->m_Position.x = -200.f;
+                soundManager_->PlaySound("click", 0);
             }
 
             if (moveRightInput) {
                 transform->m_Position.x = 200.f;
+                soundManager_->PlaySound("click", 0);
             }
 
             if (select) {
                 if (transform->m_Position.x == -200.f) {
                     gameState->m_CurrentState = gameMode;
+                    soundManager_->PlayMusic("play_music", -1);
+                    soundManager_->PlaySound("select", 0);
                 }
                 else if (transform->m_Position.x == 200.f) {
                     gameState->m_CurrentState = Engine::GameStates::MainMenu;
+                    soundManager_->PlayMusic("main_menu_music", -1);
+                    soundManager_->PlaySound("select", 0);
                 }
             }
 

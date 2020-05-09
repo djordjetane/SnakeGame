@@ -64,6 +64,7 @@ namespace Game
             if (time_passed <= 0.5) {
                 if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 3) {
                     transform->m_Position.y = 0.f;
+                    soundManager_->PlaySound("count", 0);
                 }
             }
             else if (time_passed > 0.5 && time_passed <= 1.0) {
@@ -72,6 +73,7 @@ namespace Game
                 }
                 if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 2) {
                     transform->m_Position.y = 0.f;
+                    soundManager_->PlaySound("count", 0);
                 }
             }
             else if (time_passed > 1.0 && time_passed <= 1.5) {
@@ -80,6 +82,7 @@ namespace Game
                 }
                 if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 1) {
                     transform->m_Position.y = 0.f;
+                    soundManager_->PlaySound("count", 0);
                 }
             }
             else if (time_passed > 1.5) {
@@ -88,6 +91,7 @@ namespace Game
                 }
                 if (transform->m_Position.y > 8000.f && gameState->m_CurrentState == Engine::GameStates::ResumingLevel && resum->numInQueue == 4) {
                     transform->m_Position.y = 0.f;
+                    soundManager_->PlaySound("go", 0);
                 }
             }
 
