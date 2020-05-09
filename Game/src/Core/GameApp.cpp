@@ -195,7 +195,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelWon) {
         
-        m_VictoryScreen->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_GameMode);
+        m_VictoryScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_ScoreController->RestartScore();
             m_PlayerController->ResetSnake(m_EntityManager.get());
