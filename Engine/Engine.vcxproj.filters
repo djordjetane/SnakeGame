@@ -102,12 +102,18 @@
     <ClCompile Include="src\Physics\PhysicsSystem.cpp">
       <Filter>src\PhysicsSystem</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sound\SoundHandler.cpp" />
     <ClCompile Include="src\Sound\Sound.cpp">
       <Filter>src\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sound\SoundManager.cpp" />
-    <ClCompile Include="src\Sound\Music.cpp" />
+    <ClCompile Include="src\Sound\Music.cpp">
+      <Filter>src\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sound\SoundHandler.cpp">
+      <Filter>src\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sound\SoundManager.cpp">
+      <Filter>src\Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extern\spdlog\async.h">
@@ -1058,12 +1064,18 @@
     <ClInclude Include="src\Physics\PhysicsSystem.h">
       <Filter>src\PhysicsSystem</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sound\SoundHandler.h" />
     <ClInclude Include="src\Sound\Sound.h">
       <Filter>src\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sound\SoundManager.h" />
-    <ClInclude Include="src\Sound\Music.h" />
+    <ClInclude Include="src\Sound\Music.h">
+      <Filter>src\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sound\SoundHandler.h">
+      <Filter>src\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sound\SoundManager.h">
+      <Filter>src\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="extern\spdlog\LICENSE">
