@@ -10,7 +10,7 @@ namespace Game
 
         auto background = std::make_unique<Engine::Entity>();
         background->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1280.f, 740.f);
-        background->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("black");
+        background->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("game_mode_menu");//ovde dodaj nove
         background->AddComponent<GameModeMenuComponent>();
         entityManager_->AddEntity(std::move(background));
 

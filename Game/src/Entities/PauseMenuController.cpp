@@ -10,7 +10,7 @@ namespace Game
 
         auto background = std::make_unique<Engine::Entity>();
         background->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1280.f, 740.f);
-        background->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("transparent");
+        background->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("pause_menu");
         background->AddComponent<PauseMenuComponent>();
         entityManager_->AddEntity(std::move(background));
 
