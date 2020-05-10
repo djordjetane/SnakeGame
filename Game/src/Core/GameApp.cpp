@@ -103,7 +103,7 @@ bool Game::GameApp::GameSpecificInit()
 
     m_SoundManager->CreateMusic("main_menu_music", "..\\Data\\Sounds\\menu_music.mp3");
     m_SoundManager->CreateMusic("play_music", "..\\Data\\Sounds\\play_music.mp3");
-    
+    m_SoundManager->CreateMusic("victory", "..\\Data\\Sounds\\victory.ogg");
 
     std::vector<Engine::Texture*> fruitTextures{};
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit2"));
@@ -200,6 +200,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_ScoreController->RestartScore();
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_SoundManager.get()->StopMusic();
+            m_SoundManager.get()->PlayMusic("victory", 1);
             m_firstLoad = true;
             if (m_level < 4) {
                 m_level++;
@@ -263,6 +264,9 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelWon) {
         
         m_VictoryScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
+        if (m_CurrentGameState->m_CurrentState != Engine::GameStates::LevelWon) {
+            m_SoundManager.get()->StopMusic();
+        }
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_ScoreController->RestartScore();
             m_PlayerController->ResetSnake(m_EntityManager.get());
