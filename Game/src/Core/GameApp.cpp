@@ -29,7 +29,13 @@ bool Game::GameApp::GameSpecificInit()
     // TestImage
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "grass", "..\\Data\\grass.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "snakeBody", "..\\Data\\snakebody.png");
-    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "red", "..\\Data\\red.png");        
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "red", "..\\Data\\red.png");
+
+    //menu textures
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "game_mode_menu", "..\\Data\\game_mode_menu.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "main menu", "..\\Data\\main menu.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "pause_menu", "..\\Data\\pause_menu.png");
+
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "start", "..\\Data\\start.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "quit", "..\\Data\\quit.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "resume", "..\\Data\\resume.png");
