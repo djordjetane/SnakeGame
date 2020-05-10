@@ -13,8 +13,8 @@ namespace Game {
 		int mlp_x = rand() % 2 ? 1 : -1;
 		int mlp_y = rand() % 2 ? 1 : -1;
 
-		float x = random_x * mlp_x * 40;
-		float y = random_y * mlp_y * 40;
+		float x = random_x * mlp_x * 40.f;
+		float y = random_y * mlp_y * 40.f;
 
 		return { x, y };
 	}
@@ -49,8 +49,8 @@ namespace Game {
 		while (collider->m_CollidedWith.size() != 0)
 		{
 			auto [x, y] = GetRandomPosition();
-			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.x = x;
-			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.y = y;
+			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.x = x-20;
+			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.y = y-20;
 		}
 
 		auto superFruit = std::make_unique<Engine::Entity>();
@@ -87,8 +87,8 @@ namespace Game {
 					entity->GetComponent<HeadComponent>()->m_HasEatenFruit = true;
 					auto [x, y] = GetRandomPosition();
 					auto transform = fruit->GetComponent<Engine::TransformComponent>();
-					transform->m_Position.x = x;
-					transform->m_Position.y = y;
+					transform->m_Position.x = x-20;
+					transform->m_Position.y = y-20;
 					fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
 
 					auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
@@ -96,12 +96,12 @@ namespace Game {
 					soundManager_->PlaySound("eat", 0);
 				}
 
-				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())
+				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>() || entity->HasComponent<SuperFruitComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = fruit->GetComponent<Engine::TransformComponent>();
-					transform->m_Position.x = x;
-					transform->m_Position.y = y;
+					transform->m_Position.x = x-20;
+					transform->m_Position.y = y-20;
 				}
 			}					
 		}		
@@ -138,10 +138,12 @@ namespace Game {
 				{
 					m_superChange = 391;
 					entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = true;
+					auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
+					scoreEntity->GetComponent<ScoreComponent>()->m_Score+=2;
 					soundManager_->PlaySound("super_fruit", 0);
 				}
 
-				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())
+				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>() || entity->HasComponent<FruitComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = superFruit->GetComponent<Engine::TransformComponent>();

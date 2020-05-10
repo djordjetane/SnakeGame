@@ -21,3 +21,5 @@ using mat4x4 = glm::mat4x4;
 using Color = glm::u8vec4;
 
 #include "Engine.h"
+#include "Entities.h"
+#include "GameData.h"
