@@ -261,7 +261,7 @@ namespace Game
                     AppendSnake(entityManager_, 1);
                     head->GetComponent<HeadComponent>()->m_HasEatenFruit = false;
 
-                    if (CheckWinCondition(entityManager_,gameModeSettings)) {
+                    if (gameMode == Engine::GameStates::PlayingLevel && CheckWinCondition(entityManager_,gameModeSettings)) {
                         gameState->m_CurrentState = Engine::GameStates::LevelWon;
                     }
                 }
@@ -270,7 +270,7 @@ namespace Game
                     m_framerate += 2;
                     head->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = false;
 
-                    if (CheckWinCondition(entityManager_, gameModeSettings)) {
+                    if (gameMode == Engine::GameStates::PlayingLevel && CheckWinCondition(entityManager_, gameModeSettings)) {
                         gameState->m_CurrentState = Engine::GameStates::LevelWon;
                     }
                 }
