@@ -15,7 +15,7 @@ namespace Game{
 		auto entity = std::make_unique<Engine::Entity>();
 		entity->AddComponent<ScoreComponent>().m_Score = 0;
 		entity->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("score");
-		entity->AddComponent<Engine::TransformComponent>() = {-590.f, -320.f, 80.f, 80.f};
+		entity->AddComponent<Engine::TransformComponent>() = {590.f, -320.f, 80.f, 80.f};
 
 		entityManager_->AddEntity(std::move(entity));
 

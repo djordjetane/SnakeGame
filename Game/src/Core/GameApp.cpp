@@ -74,8 +74,9 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_400x160", "..\\Data\\walls\\wall_400x160.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x160", "..\\Data\\walls\\wall_80x160.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x80", "..\\Data\\walls\\wall_80x80.png");
-    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_100x500", "..\\Data\\walls\\wall_100x500.png");
-    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_100x200", "..\\Data\\walls\\wall_100x200.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x400", "..\\Data\\walls\\wall_80x400.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x200", "..\\Data\\walls\\wall_80x200.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_200x80", "..\\Data\\walls\\wall_200x80.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_200x100", "..\\Data\\walls\\wall_200x100.png");
 
     // Fruit Textures
