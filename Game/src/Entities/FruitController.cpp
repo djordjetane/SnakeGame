@@ -13,8 +13,8 @@ namespace Game {
 		int mlp_x = rand() % 2 ? 1 : -1;
 		int mlp_y = rand() % 2 ? 1 : -1;
 
-		float x = random_x * mlp_x * 40;
-		float y = random_y * mlp_y * 40;
+		float x = random_x * mlp_x * 40.f;
+		float y = random_y * mlp_y * 40.f;
 
 		return { x, y };
 	}
@@ -143,7 +143,7 @@ namespace Game {
 					soundManager_->PlaySound("super_fruit", 0);
 				}
 
-				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>())
+				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>() || entity->HasComponent<FruitComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = superFruit->GetComponent<Engine::TransformComponent>();

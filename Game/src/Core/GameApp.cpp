@@ -82,6 +82,7 @@ bool Game::GameApp::GameSpecificInit()
     m_SoundManager->CreateSound("go", "..\\Data\\Sounds\\go.ogg");
     m_SoundManager->CreateSound("eat", "..\\Data\\Sounds\\eat.ogg");
     m_SoundManager->CreateSound("super_fruit", "..\\Data\\Sounds\\super_fruit.ogg");
+    m_SoundManager->CreateSound("superfruit_1", "..\\Data\\Sounds\\superfruit_1.wav");
 
     m_SoundManager->CreateMusic("main_menu_music", "..\\Data\\Sounds\\menu_music.mp3");
     m_SoundManager->CreateMusic("play_music", "..\\Data\\Sounds\\play_music.mp3");
@@ -93,6 +94,11 @@ bool Game::GameApp::GameSpecificInit()
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit3"));
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit4"));
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit5"));
+
+    std::vector<Engine::Texture*> superFruitTextures{};
+    superFruitTextures.push_back(m_TextureManager->GetTexture("fruit1"));
+    superFruitTextures.push_back(m_TextureManager->GetTexture("fruit3"));
+    superFruitTextures.push_back(m_TextureManager->GetTexture("fruit4"));
     
     m_GameModeSettings = std::make_unique<Engine::GameModeSettings>();
     m_GameModeSettings->areBordersDeath = true;
@@ -105,6 +111,10 @@ bool Game::GameApp::GameSpecificInit()
     m_Stadium = std::make_unique<Stadium>();
     m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("wall")); 
 
+    // Fruit 
+    m_FruitController = std::make_unique<FruitController>(); // Important to be after Stadium to be drawn over it
+    m_FruitController->Init(m_EntityManager.get(), fruitTextures);
+
     // Player
     m_PlayerController = std::make_unique<PlayerController>();
     m_PlayerController->Init(m_EntityManager.get(), m_TextureManager->GetTexture("snakeBody"));
@@ -112,10 +122,6 @@ bool Game::GameApp::GameSpecificInit()
     // Score
     m_ScoreController = std::make_unique<ScoreController>();
     m_ScoreController->Init(m_EntityManager.get(), m_TextureManager.get(), m_RenderSystem->GetRenderer());
-
-    // Fruit 
-    m_FruitController = std::make_unique<FruitController>(); // Importaint to be after Stadium to be drawn over it
-    m_FruitController->Init(m_EntityManager.get(), fruitTextures);    
 
     //Main Menu
     m_MainMenu = std::make_unique<MainMenu>();

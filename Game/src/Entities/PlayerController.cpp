@@ -10,7 +10,7 @@ namespace Game
         ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to PlayerController::Init()");
         ASSERT(texture_ != nullptr, "Must pass valid pointer to texture to PlayerController::Init()");
 
-        m_framerate = 8;
+        m_framerate = START_SNAKE_SPEED;
         m_passedTime;
 
         auto data = std::make_unique<Engine::Entity>();;
@@ -19,9 +19,9 @@ namespace Game
         auto player = std::make_unique<Engine::Entity>();
 
         //initializing head entity
-        player->AddComponent<Engine::TransformComponent>(-420.f, 20.f, 40.f, 40.f);
-        player->AddComponent<Engine::CollisionComponent>(38.f, 38.f);
-        player->AddComponent<Engine::PlayerComponent>(200.f);
+        player->AddComponent<Engine::TransformComponent>(START1_SNAKE_POS_X, START1_SNAKE_POS_Y, SNAKE_PART_SIZE, SNAKE_PART_SIZE);
+        player->AddComponent<Engine::CollisionComponent>(SNAKE_PART_SIZE, SNAKE_PART_SIZE);
+        player->AddComponent<Engine::PlayerComponent>();
         player->AddComponent<Engine::InputComponent>();
         player->AddComponent<Engine::MoverComponent>();
         player->AddComponent<HeadComponent>(EHeadDirection::Right);
@@ -37,17 +37,17 @@ namespace Game
         entityManager_->AddEntity(std::move(player));        
 
         //initializing body part entities
-        for (int i = 1; i < 100; i++) {
+        for (int i = 1; i < MAX_SNAKE_LENGTH; i++) {
         
             player=std::make_unique<Engine::Entity>();
-            player->AddComponent<Engine::TransformComponent>(-420.0f-40.f*i, 20.f, 40.f, 40.f);
-            player->AddComponent<Engine::CollisionComponent>(38.f, 38.f);
-            player->AddComponent<Engine::PlayerComponent>(200.f);
+            player->AddComponent<Engine::TransformComponent>(START1_SNAKE_POS_X - PART_SIZE*i, START1_SNAKE_POS_Y, SNAKE_PART_SIZE, SNAKE_PART_SIZE);
+            player->AddComponent<Engine::CollisionComponent>(SNAKE_PART_SIZE, SNAKE_PART_SIZE);
+            player->AddComponent<Engine::PlayerComponent>();
             player->AddComponent<BodyComponent>(i);
             player->AddComponent<Engine::SpriteComponent>().m_Image = texture_;
 
             //body parts longer than starting length are deactivated
-            if (i > 2) {
+            if (i >= START_SNAKE_LENGTH ) {
                 player->GetComponent<Engine::SpriteComponent>()->m_Active = false;
                 player->GetComponent<Engine::CollisionComponent>()->m_Active = false;
             }
@@ -59,8 +59,8 @@ namespace Game
         // *** Helper Component ***
         auto tmpEntity = std::make_unique<Engine::Entity>();
         tmpEntity->AddComponent<HelperComponent>();
-        tmpEntity->AddComponent<Engine::TransformComponent>(-420.f, 20.f, 40.f, 40.f);
-        tmpEntity->AddComponent<Engine::CollisionComponent>(38.f, 38.f);
+        tmpEntity->AddComponent<Engine::TransformComponent>(START1_SNAKE_POS_X, START1_SNAKE_POS_Y, SNAKE_PART_SIZE, SNAKE_PART_SIZE);
+        tmpEntity->AddComponent<Engine::CollisionComponent>(SNAKE_PART_SIZE, SNAKE_PART_SIZE);
         entityManager_->AddEntity(std::move(tmpEntity));
 
         return !(entityManager_->GetAllEntitiesWithComponent<Engine::PlayerComponent>().empty());
@@ -105,15 +105,19 @@ namespace Game
            
                 if (moveUpInput && !(direction == EHeadDirection::Down)) {
                     head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Up;
+                    m_inputDelay = 1;
                 }
                 else if (moveDownInput && !(direction == EHeadDirection::Up)) {
                     head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Down;
+                    m_inputDelay = 1;
                 }
                 else if (moveLeftInput && !(direction == EHeadDirection::Right)) {
                     head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Left;
+                    m_inputDelay = 1;
                 }
                 else if (moveRightInput && !(direction == EHeadDirection::Left)) {
                     head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
+                    m_inputDelay = 1;
                 }
             }
 
@@ -137,7 +141,7 @@ namespace Game
                 // Collision with Bumpers
                 if (entityCollided->HasComponent<BumperComponent>())
                 {
-                    m_inputDelay = 2;
+                    m_inputDelay = 3;
 
                     //if bumpers are death reset snake
                     if (gameModeSettings->areBumpersDeath) {
@@ -246,7 +250,7 @@ namespace Game
                 }
             }
 
-            //if enough time has passed we can activate the system
+            //if enough time has passed we can activate movement and rest of collision
             if (m_passedTime > timeThreshold) {
 
                 //update waiting to read input
@@ -278,6 +282,7 @@ namespace Game
 
                 // Collision/movement with window edges
                 if (transform->m_Position.x < -620.f){
+
                     if (gameModeSettings->areBordersDeath && gameMode==Engine::GameStates::PlayingLevel) {
                         ResetSnake(entityManager_);
                         gameState->m_CurrentState = Engine::GameStates::LevelLost;
@@ -400,7 +405,7 @@ namespace Game
         auto dataEntity = entityManager_->GetAllEntitiesWithComponent<PositionComponent>();
 
         for (auto head : headEntity) {
-            head->GetComponent<Engine::TransformComponent>()->m_Position = { -420.f,20.f };
+            head->GetComponent<Engine::TransformComponent>()->m_Position = { START1_SNAKE_POS_X,START1_SNAKE_POS_Y };
             head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
             
             head->GetComponent<Engine::MoverComponent>()->m_TranslationSpeed = { 0.f,0.f };
@@ -408,8 +413,8 @@ namespace Game
 
         for (auto part : bodyEntities) {
             auto index = part->GetComponent<BodyComponent>()->m_Index;
-            if (index < 3) {
-                part->GetComponent<Engine::TransformComponent>()->m_Position = { -420.f-40*index,20.f };
+            if (index < START_SNAKE_LENGTH) {
+                part->GetComponent<Engine::TransformComponent>()->m_Position = { START1_SNAKE_POS_X - PART_SIZE*index, START1_SNAKE_POS_Y };
             }
             else {
                 part->GetComponent<Engine::SpriteComponent>()->m_Active = false;
@@ -421,14 +426,14 @@ namespace Game
             data->GetComponent<PositionComponent>()->m_CurrentLength = 3;
         }
 
-        m_framerate = 8;
+        m_framerate = START_SNAKE_SPEED;
     }
     bool PlayerController::CheckWinCondition(Engine::EntityManager* entityManager_, Engine::GameModeSettings* gameModeSettings)
     {
         auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
         auto score = scoreEntity->GetComponent<ScoreComponent>()->m_Score;
         auto difficulty = gameModeSettings->difficulty;
-        if ((difficulty == 1 && score >= 10) || (difficulty == 2 && score >= 20)) {
+        if ((difficulty == EASY_MODE && score >= WIN_SCORE_EASY) || (difficulty == HARD_MODE && score >= WIN_SCORE_HARD)) {
             return true;
         }
         return false;

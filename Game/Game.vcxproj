@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="src\Core\GameApp.h" />
     <ClInclude Include="src\Entities.h" />
     <ClInclude Include="src\Entities\CameraController.h" />

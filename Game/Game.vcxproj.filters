@@ -57,6 +57,9 @@
     <ClInclude Include="src\Entities\ScoreController.h">
       <Filter>src\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="GameData.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\precomp.cpp">

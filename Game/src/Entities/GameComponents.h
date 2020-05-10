@@ -1,4 +1,5 @@
 #pragma once
+#include "GameData.h"
 
 namespace Game
 {
@@ -30,8 +31,8 @@ namespace Game
     };
 
     struct PositionComponent : public Engine::Component {
-        vec2 m_Positions[100];
-        int m_CurrentLength=3;
+        vec2 m_Positions[MAX_SNAKE_LENGTH];
+        int m_CurrentLength=START_SNAKE_LENGTH;
     };
 
     struct FruitComponent : public Engine::Component
