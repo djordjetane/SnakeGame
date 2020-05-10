@@ -13,8 +13,8 @@ namespace Game {
 		int mlp_x = rand() % 2 ? 1 : -1;
 		int mlp_y = rand() % 2 ? 1 : -1;
 
-		float x = random_x * mlp_x * 40.f;
-		float y = random_y * mlp_y * 40.f;
+		float x = random_x * mlp_x * 40.f-20.f;
+		float y = random_y * mlp_y * 40.f-20.f;
 
 		return { x, y };
 	}
@@ -22,17 +22,25 @@ namespace Game {
 	// *********************************
 	// * Initializing fruit controller *
 	// *********************************
-	bool FruitController::Init(Engine::EntityManager* entityManager_, std::vector<Engine::Texture*>& textures_)
+	bool FruitController::Init(Engine::EntityManager* entityManager_, std::vector<Engine::Texture*>& textures_, std::vector<Engine::Texture*>& superTextures_)
 	{
 		ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to FruitController::Init()");
-		ASSERT(textures_.size() != 0, "Must pass texture to FruitController::Init()");		
+		ASSERT(textures_.size() != 0, "Must pass texture for fruit to FruitController::Init()");	
+		ASSERT(superTextures_.size() != 0, "Must pass texture for superFruit to FruitController::Init()");
 
 		for (auto& texture : textures_)
 		{
 			ASSERT(texture != nullptr, "Must pass a valid texture to FruitController::Init()");
 		}
 
+		for (auto& texture : superTextures_)
+		{
+			ASSERT(texture != nullptr, "Must pass a valid texture to FruitController::Init()");
+		}
+
+
 		m_textures = textures_;
+		m_superTextures = superTextures_;
 
 		auto fruit = std::make_unique<Engine::Entity>();
 
@@ -49,15 +57,15 @@ namespace Game {
 		while (collider->m_CollidedWith.size() != 0)
 		{
 			auto [x, y] = GetRandomPosition();
-			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.x = x-20;
-			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.y = y-20;
+			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.x = x;
+			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.y = y;
 		}
 
 		auto superFruit = std::make_unique<Engine::Entity>();
 		superFruit->AddComponent<SuperFruitComponent>();
 		superFruit->AddComponent<Engine::TransformComponent>(9000.f, 9000.f, 60.f, 60.f);
 		superFruit->AddComponent<Engine::CollisionComponent>(60.f, 60.f);
-		superFruit->AddComponent<Engine::SpriteComponent>().m_Image = m_textures[rand() % m_textures.size()];
+		superFruit->AddComponent<Engine::SpriteComponent>().m_Image = m_superTextures[rand() % m_superTextures.size()];
 		
 		entityManager_->AddEntity(std::move(superFruit));
 		
@@ -87,8 +95,8 @@ namespace Game {
 					entity->GetComponent<HeadComponent>()->m_HasEatenFruit = true;
 					auto [x, y] = GetRandomPosition();
 					auto transform = fruit->GetComponent<Engine::TransformComponent>();
-					transform->m_Position.x = x-20;
-					transform->m_Position.y = y-20;
+					transform->m_Position.x = x;
+					transform->m_Position.y = y;
 					fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
 
 					auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
@@ -100,8 +108,8 @@ namespace Game {
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = fruit->GetComponent<Engine::TransformComponent>();
-					transform->m_Position.x = x-20;
-					transform->m_Position.y = y-20;
+					transform->m_Position.x = x;
+					transform->m_Position.y = y;
 				}
 			}					
 		}		
@@ -118,10 +126,10 @@ namespace Game {
 			auto [x, y] = GetRandomPosition();
 			
 			auto transformator = superFruit->GetComponent<Engine::TransformComponent>();
-			transformator->m_Position.x = x;
-			transformator->m_Position.y = y;
+			transformator->m_Position.x = x+10.f;
+			transformator->m_Position.y = y+10.f;
 
-			superFruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
+			superFruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_superTextures[rand() % m_superTextures.size()];
 
 			superFruit->GetComponent<SuperFruitComponent>()->m_shown = true;
 		}		
@@ -140,15 +148,15 @@ namespace Game {
 					entity->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = true;
 					auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
 					scoreEntity->GetComponent<ScoreComponent>()->m_Score+=2;
-					soundManager_->PlaySound("super_fruit", 0);
+					soundManager_->PlaySound("superfruit_1", 0);
 				}
 
 				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>() || entity->HasComponent<FruitComponent>())
 				{
 					auto [x, y] = GetRandomPosition();
 					auto transform = superFruit->GetComponent<Engine::TransformComponent>();
-					transform->m_Position.x = x;
-					transform->m_Position.y = y;
+					transform->m_Position.x = x+10.f;
+					transform->m_Position.y = y+10.f;
 				}
 			}
 			

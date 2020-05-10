@@ -66,7 +66,7 @@ namespace Game
         return !(entityManager_->GetAllEntitiesWithComponent<Engine::PlayerComponent>().empty());
     }
 
-    void PlayerController::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameModeSettings* gameModeSettings, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
+    void PlayerController::Update(float dt, Engine::EntityManager* entityManager_, Engine::GameModeSettings* gameModeSettings, Engine::CurrentGameState* gameState, Engine::GameStates gameMode, Engine::SoundManager* soundManager_)
     {
         //count passed time
         m_passedTime += dt;
@@ -133,6 +133,7 @@ namespace Game
             {
                 //if snake hit itself reset game
                 if (entityCollided->HasComponent<BodyComponent>()) {
+                    soundManager_->PlaySound("death", 0);
                     ResetSnake(entityManager_);
                     gameState->m_CurrentState = Engine::GameStates::LevelLost;
                     return;
@@ -145,6 +146,7 @@ namespace Game
 
                     //if bumpers are death reset snake
                     if (gameModeSettings->areBumpersDeath) {
+                        soundManager_->PlaySound("death", 0);
                         ResetSnake(entityManager_);
                         gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
@@ -152,6 +154,8 @@ namespace Game
                     //else move snake in appropriate direciton 
                     else {
                         hasHitBumper = true;
+
+                        soundManager_->PlaySound("bounce", 0);
 
                         auto position = head->GetComponent<Engine::TransformComponent>()->m_Position;
                         auto helpEntity = entityManager_->GetAllEntitiesWithComponent<HelperComponent>()[0];
@@ -171,7 +175,7 @@ namespace Game
                         case EHeadDirection::Left:
                             y = prevPosition.y;
                             helperTransform->m_Position.x = prevPosition.x;
-                            helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
+                            helperTransform->m_Position.y = y < 0 ? y + PART_SIZE : y - PART_SIZE;
                             direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
 
                             for (auto bumper : bumperEntites) {
@@ -188,7 +192,7 @@ namespace Game
                         case EHeadDirection::Right:
                             y = prevPosition.y;
                             helperTransform->m_Position.x = prevPosition.x;
-                            helperTransform->m_Position.y = y < 0 ? y + 40.f : y - 40.f;
+                            helperTransform->m_Position.y = y < 0 ? y + PART_SIZE : y - PART_SIZE;
                             direction = y < helperTransform->m_Position.y ? EHeadDirection::Down : EHeadDirection::Up;
 
                             for (auto bumper : bumperEntites)
@@ -206,7 +210,7 @@ namespace Game
                         case EHeadDirection::Up:
                             x = prevPosition.x;
                             helperTransform->m_Position.y = prevPosition.y;
-                            helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
+                            helperTransform->m_Position.x = x < 0 ? x + PART_SIZE : x - PART_SIZE;
                             direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
 
                             for (auto bumper : bumperEntites)
@@ -224,7 +228,7 @@ namespace Game
                         case EHeadDirection::Down:
                             x = prevPosition.x;
                             helperTransform->m_Position.y = prevPosition.y;
-                            helperTransform->m_Position.x = x < 0 ? x + 40.f : x - 40.f;
+                            helperTransform->m_Position.x = x < 0 ? x + PART_SIZE : x - PART_SIZE;
                             direction = x < helperTransform->m_Position.x ? EHeadDirection::Right : EHeadDirection::Left;
 
                             for (auto bumper : bumperEntites)
@@ -244,8 +248,8 @@ namespace Game
                         }
 
                         head->GetComponent<HeadComponent>()->m_Direction = direction;
-                        transform->m_Position.x += 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
-                        transform->m_Position.y += 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
+                        transform->m_Position.x += PART_SIZE * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
+                        transform->m_Position.y += PART_SIZE * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
                     }
                 }
             }
@@ -284,6 +288,7 @@ namespace Game
                 if (transform->m_Position.x < -620.f){
 
                     if (gameModeSettings->areBordersDeath && gameMode==Engine::GameStates::PlayingLevel) {
+                        soundManager_->PlaySound("death", 0);
                         ResetSnake(entityManager_);
                         gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
@@ -295,6 +300,7 @@ namespace Game
                 }
                 else if(transform->m_Position.x > 620.f){
                     if (gameModeSettings->areBordersDeath && gameMode == Engine::GameStates::PlayingLevel) {
+                        soundManager_->PlaySound("death", 0);
                         ResetSnake(entityManager_);
                         gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
@@ -306,6 +312,7 @@ namespace Game
                 }
                 else if (transform->m_Position.y < -340.f){
                     if (gameModeSettings->areBordersDeath && gameMode == Engine::GameStates::PlayingLevel) {
+                        soundManager_->PlaySound("death", 0);
                         ResetSnake(entityManager_);
                         gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
@@ -317,6 +324,7 @@ namespace Game
                 }
                 else if (transform->m_Position.y > 340.f){
                     if (gameModeSettings->areBordersDeath && gameMode == Engine::GameStates::PlayingLevel) {
+                        soundManager_->PlaySound("death", 0);
                         ResetSnake(entityManager_);
                         gameState->m_CurrentState = Engine::GameStates::LevelLost;
                         return;
@@ -334,8 +342,8 @@ namespace Game
 
                 //update speed
                 if (!hasHitBumper && !hasHitWall) {
-                    move->m_TranslationSpeed.x = 40 * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
-                    move->m_TranslationSpeed.y = 40 * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
+                    move->m_TranslationSpeed.x = PART_SIZE * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
+                    move->m_TranslationSpeed.y = PART_SIZE * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
                 }
             }
             //if not enough time passed just stay in place 

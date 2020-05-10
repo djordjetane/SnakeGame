@@ -36,6 +36,7 @@ namespace Game
         {
             gameState->m_CurrentState = Engine::GameStates::PauseMenu;
             soundManager_->PauseMusic();
+            soundManager_->PlaySound("pause_in", 0);
         }       
     }
 }

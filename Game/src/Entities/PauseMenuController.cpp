@@ -68,6 +68,7 @@ namespace Game
                 if (transform->m_Position.y == -100.f) {
                     gameState->m_CurrentState = Engine::GameStates::ResumingLevel;
                     soundManager_->PlaySound("select", 0);
+                    //soundManager_->PlaySound("pause_out", 0);
                     transform->m_Position.y = 9000.f;
                 }
                 else if (transform->m_Position.y == 0.f) {
