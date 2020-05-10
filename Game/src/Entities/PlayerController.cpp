@@ -256,15 +256,23 @@ namespace Game
 
                 //Collision
 
-                //if head collided with fruit append it 
+                //if head collided with fruit append it and check if level is won
                 if (head->GetComponent<HeadComponent>()->m_HasEatenFruit) {
                     AppendSnake(entityManager_, 1);
                     head->GetComponent<HeadComponent>()->m_HasEatenFruit = false;
+
+                    if (CheckWinCondition(entityManager_,gameModeSettings)) {
+                        gameState->m_CurrentState = Engine::GameStates::LevelWon;
+                    }
                 }
-                //if it collided with superfruit increase speed / framerate
+                //if it collided with superfruit increase speed / framerate and check if level is won
                 if (head->GetComponent<HeadComponent>()->m_HasEatenSuperFruit) {
                     m_framerate += 2;
                     head->GetComponent<HeadComponent>()->m_HasEatenSuperFruit = false;
+
+                    if (CheckWinCondition(entityManager_, gameModeSettings)) {
+                        gameState->m_CurrentState = Engine::GameStates::LevelWon;
+                    }
                 }
 
 
@@ -414,5 +422,15 @@ namespace Game
         }
 
         m_framerate = 8;
+    }
+    bool PlayerController::CheckWinCondition(Engine::EntityManager* entityManager_, Engine::GameModeSettings* gameModeSettings)
+    {
+        auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
+        auto score = scoreEntity->GetComponent<ScoreComponent>()->m_Score;
+        auto difficulty = gameModeSettings->difficulty;
+        if ((difficulty == 1 && score >= 10) || (difficulty == 2 && score >= 20)) {
+            return true;
+        }
+        return false;
     }
 }

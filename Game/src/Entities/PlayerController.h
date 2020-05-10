@@ -20,5 +20,6 @@ namespace Game
         void ActivateBodyPart(Engine::EntityManager* entityManager_, int index, vec2 position);
         void AppendSnake(Engine::EntityManager* entityManager_, int length);
         void ResetSnake(Engine::EntityManager* entityManager_);
+        bool CheckWinCondition(Engine::EntityManager* entityManager_, Engine::GameModeSettings* gameModeSettings);
     };
 }
