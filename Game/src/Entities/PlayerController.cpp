@@ -97,30 +97,6 @@ namespace Game
                 return;
             }
 
-            if (!m_inputDelay) {
-                bool moveUpInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveUp"));
-                bool moveDownInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveDown"));
-                bool moveLeftInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveLeft"));
-                bool moveRightInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveRight"));
-           
-                if (moveUpInput && !(direction == EHeadDirection::Down)) {
-                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Up;
-                    m_inputDelay = 1;
-                }
-                else if (moveDownInput && !(direction == EHeadDirection::Up)) {
-                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Down;
-                    m_inputDelay = 1;
-                }
-                else if (moveLeftInput && !(direction == EHeadDirection::Right)) {
-                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Left;
-                    m_inputDelay = 1;
-                }
-                else if (moveRightInput && !(direction == EHeadDirection::Left)) {
-                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
-                    m_inputDelay = 1;
-                }
-            }
-
             //saving previous position
             auto prevPosition = dataEntity->GetComponent<PositionComponent>()->m_Positions[0];
 
@@ -142,7 +118,7 @@ namespace Game
                 // Collision with Bumpers
                 if (entityCollided->HasComponent<BumperComponent>())
                 {
-                    m_inputDelay = 3;
+                    m_inputDelay = 2;
 
                     //if bumpers are death reset snake
                     if (gameModeSettings->areBumpersDeath) {
@@ -251,8 +227,33 @@ namespace Game
                         transform->m_Position.x += PART_SIZE * ((direction == EHeadDirection::Left ? -1.0f : 0.0f) + (direction == EHeadDirection::Right ? 1.0f : 0.0f));
                         transform->m_Position.y += PART_SIZE * ((direction == EHeadDirection::Up ? -1.0f : 0.0f) + (direction == EHeadDirection::Down ? 1.0f : 0.0f));
                     }
+                }//end of bumper collision
+            }//end of collision
+
+            if (!m_inputDelay) {
+                bool moveUpInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveUp"));
+                bool moveDownInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveDown"));
+                bool moveLeftInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveLeft"));
+                bool moveRightInput = Engine::InputManager::IsActionActive(input, fmt::format("Player1MoveRight"));
+
+                if (moveUpInput && !(direction == EHeadDirection::Down)) {
+                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Up;
+                    m_inputDelay = 1;
                 }
-            }
+                else if (moveDownInput && !(direction == EHeadDirection::Up)) {
+                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Down;
+                    m_inputDelay = 1;
+                }
+                else if (moveLeftInput && !(direction == EHeadDirection::Right)) {
+                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Left;
+                    m_inputDelay = 1;
+                }
+                else if (moveRightInput && !(direction == EHeadDirection::Left)) {
+                    head->GetComponent<HeadComponent>()->m_Direction = EHeadDirection::Right;
+                    m_inputDelay = 1;
+                }
+            }//end of input processing
+
 
             //if enough time has passed we can activate movement and rest of collision
             if (m_passedTime > timeThreshold) {
