@@ -67,6 +67,18 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "next_level", "..\\Data\\next_level.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall", "..\\Data\\wall.png");
 
+    // Wall Textures
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_240x80", "..\\Data\\walls\\wall_240x80.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x240", "..\\Data\\walls\\wall_80x240.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_160x240", "..\\Data\\walls\\wall_160x240.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_400x160", "..\\Data\\walls\\wall_400x160.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x160", "..\\Data\\walls\\wall_80x160.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x80", "..\\Data\\walls\\wall_80x80.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_100x500", "..\\Data\\walls\\wall_100x500.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_100x200", "..\\Data\\walls\\wall_100x200.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_200x100", "..\\Data\\walls\\wall_200x100.png");
+
+    // Fruit Textures
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit1", "..\\Data\\fruit1.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit2", "..\\Data\\fruit2.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit3", "..\\Data\\fruit3.png");
@@ -113,7 +125,7 @@ bool Game::GameApp::GameSpecificInit()
     m_GameMode = Engine::GameStates::PlayingLevel;
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
-    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("wall")); 
+    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager.get()); 
 
     // Fruit 
     m_FruitController = std::make_unique<FruitController>(); // Important to be after Stadium to be drawn over it
