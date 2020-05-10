@@ -74,7 +74,6 @@ namespace Game
             if (select) {
                 if (transform->m_Position.x == -200.f) {
                     gameState->m_CurrentState = gameMode;
-                    soundManager_->PlayMusic("play_music", -1);
                     soundManager_->PlaySound("select", 0);
                 }
                 else if (transform->m_Position.x == 200.f) {

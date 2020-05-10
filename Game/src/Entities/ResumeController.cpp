@@ -106,4 +106,12 @@ namespace Game
         }
         
     }
+
+    void ResumeScreen::Destroy(Engine::EntityManager* entityManager_) {
+        auto resumeComponents = entityManager_->GetAllEntitiesWithComponents<ResumeScreenComponent, Engine::TransformComponent>();
+        for (auto& entity : resumeComponents)
+        {
+            entity->RemoveAllComponents();
+        }
+    }
 }

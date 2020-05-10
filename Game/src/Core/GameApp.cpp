@@ -67,6 +67,19 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "next_level", "..\\Data\\next_level.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall", "..\\Data\\wall.png");
 
+    // Wall Textures
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_240x80", "..\\Data\\walls\\wall_240x80.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x240", "..\\Data\\walls\\wall_80x240.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_160x240", "..\\Data\\walls\\wall_160x240.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_400x160", "..\\Data\\walls\\wall_400x160.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x160", "..\\Data\\walls\\wall_80x160.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x80", "..\\Data\\walls\\wall_80x80.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x400", "..\\Data\\walls\\wall_80x400.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_80x200", "..\\Data\\walls\\wall_80x200.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_200x80", "..\\Data\\walls\\wall_200x80.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_200x100", "..\\Data\\walls\\wall_200x100.png");
+
+    // Fruit Textures
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit1", "..\\Data\\fruit1.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit2", "..\\Data\\fruit2.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "fruit3", "..\\Data\\fruit3.png");
@@ -107,10 +120,14 @@ bool Game::GameApp::GameSpecificInit()
     m_GameModeSettings->difficulty = 1;
 
     m_firstLoad = true;
+    m_firstResumeLoad = true;
+    m_firstPauseLoad = true;
+    m_level = 1;
+
     m_GameMode = Engine::GameStates::PlayingLevel;
     // Stadium
     m_Stadium = std::make_unique<Stadium>();
-    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager->GetTexture("wall")); 
+    m_Stadium->Init(m_EntityManager.get(), m_TextureManager->GetTexture("grass"), m_TextureManager.get()); 
 
     // Fruit 
     m_FruitController = std::make_unique<FruitController>(); // Important to be after Stadium to be drawn over it
@@ -132,10 +149,10 @@ bool Game::GameApp::GameSpecificInit()
     m_GameModeMenu->Init(m_EntityManager.get(), m_TextureManager.get());
     //Pause Menu
     m_PauseMenu = std::make_unique<PauseMenu>();
-    m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager.get());
+    
     //Resume Screen
     m_ResumeScreen = std::make_unique<ResumeScreen>();
-    m_ResumeScreen->Init(m_EntityManager.get(), m_TextureManager.get());
+  
     //Death Screen
     m_DeathScreen = std::make_unique<DeathScreen>();
     m_DeathScreen->Init(m_EntityManager.get(), m_TextureManager.get());
@@ -152,7 +169,20 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingLevel) {
         if (m_firstLoad) {
             m_ScoreController->RestartScore();
-            m_Stadium->InitLvl1(m_EntityManager.get());
+            switch (m_level) {
+            case 1:
+                m_Stadium->InitLvl1(m_EntityManager.get());
+                break;
+            case 2:
+                m_Stadium->InitLvl2(m_EntityManager.get());
+                break;
+            case 3:
+                m_Stadium->InitLvlCpp(m_EntityManager.get());
+                break;
+            default:
+                break;
+            }
+            
             m_GameMode = Engine::GameStates::PlayingLevel;
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
@@ -167,7 +197,13 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         }
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelWon) {
             m_Stadium->Destroy(m_EntityManager.get());
+            m_ScoreController->RestartScore();
+            m_PlayerController->ResetSnake(m_EntityManager.get());
+            m_SoundManager.get()->StopMusic();
             m_firstLoad = true;
+            if (m_level < 4) {
+                m_level++;
+            }
         }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingInfiniteLevel) {
@@ -182,8 +218,16 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
+        if (m_firstPauseLoad) {
+            m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager.get());
+            m_firstPauseLoad = false;
+        }
         m_PauseMenu->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
+        if (m_CurrentGameState->m_CurrentState != Engine::GameStates::PauseMenu) {
+            m_PauseMenu->Destroy(m_EntityManager.get());
+            m_firstPauseLoad = true;
+        }
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_ScoreController->RestartScore();
             m_PlayerController->ResetSnake(m_EntityManager.get());
@@ -192,7 +236,17 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::ResumingLevel) {
+        if (m_firstResumeLoad) {
+            m_ResumeScreen->Init(m_EntityManager.get(), m_TextureManager.get());
+            m_firstResumeLoad = false;
+        }
+        
         m_ResumeScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
+
+        if (m_CurrentGameState->m_CurrentState != Engine::GameStates::ResumingLevel) {
+            m_ResumeScreen->Destroy(m_EntityManager.get());
+            m_firstResumeLoad = true;
+        }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::GameModeMenu) {
         m_GameModeMenu->Update(dt, m_EntityManager.get(), m_CurrentGameState.get(), m_SoundManager.get(), m_GameMode, m_GameModeSettings.get());
