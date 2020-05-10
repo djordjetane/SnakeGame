@@ -121,4 +121,18 @@ namespace Game
         }
         
     }
+
+    void PauseMenu::Destroy(Engine::EntityManager* entityManager_) {
+        auto selectionBox = entityManager_->GetAllEntitiesWithComponents<PauseSelectionComponent, Engine::InputComponent, Engine::TransformComponent>();
+        auto menuStuff = entityManager_->GetAllEntitiesWithComponents<PauseMenuComponent, Engine::TransformComponent>();
+        for (auto& entity : selectionBox)
+        {
+            entity->RemoveAllComponents();
+        }
+
+        for (auto& entity : menuStuff)
+        {
+            entity->RemoveAllComponents();
+        }
+    }
 }

@@ -9,6 +9,9 @@ namespace Game
     {
     private:
         bool m_firstLoad;
+        bool m_firstResumeLoad = true;
+        bool m_firstPauseLoad = true;
+        int m_level = 1;
 
         Engine::GameStates m_GameMode;
 
