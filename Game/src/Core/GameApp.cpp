@@ -27,7 +27,7 @@ bool Game::GameApp::GameSpecificInit()
     srand(NULL);
 
     // TestImage
-    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "grass", "..\\Data\\grass.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "grass", "..\\Data\\grass_1.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "snakeBody", "..\\Data\\snakebody.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "red", "..\\Data\\red.png");
 
@@ -95,17 +95,18 @@ bool Game::GameApp::GameSpecificInit()
     m_SoundManager->CreateSound("go", "..\\Data\\Sounds\\go.ogg");
     m_SoundManager->CreateSound("eat", "..\\Data\\Sounds\\eat.ogg");
     m_SoundManager->CreateSound("super_fruit", "..\\Data\\Sounds\\super_fruit.ogg");
+    m_SoundManager->CreateSound("move", "..\\Data\\Sounds\\move_1.wav");
+    m_SoundManager->CreateSound("bounce", "..\\Data\\Sounds\\bounce_1.wav");
+    m_SoundManager->CreateSound("death", "..\\Data\\Sounds\\death_1.wav");
     m_SoundManager->CreateSound("superfruit_1", "..\\Data\\Sounds\\superfruit_1.wav");
+    m_SoundManager->CreateSound("pause_in", "..\\Data\\Sounds\\pause7_in.wav");
 
     m_SoundManager->CreateMusic("main_menu_music", "..\\Data\\Sounds\\menu_music.mp3");
     m_SoundManager->CreateMusic("play_music", "..\\Data\\Sounds\\play_music.mp3");
     
 
     std::vector<Engine::Texture*> fruitTextures{};
-    fruitTextures.push_back(m_TextureManager->GetTexture("fruit1"));
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit2"));
-    fruitTextures.push_back(m_TextureManager->GetTexture("fruit3"));
-    fruitTextures.push_back(m_TextureManager->GetTexture("fruit4"));
     fruitTextures.push_back(m_TextureManager->GetTexture("fruit5"));
 
     std::vector<Engine::Texture*> superFruitTextures{};
@@ -130,7 +131,7 @@ bool Game::GameApp::GameSpecificInit()
 
     // Fruit 
     m_FruitController = std::make_unique<FruitController>(); // Important to be after Stadium to be drawn over it
-    m_FruitController->Init(m_EntityManager.get(), fruitTextures);
+    m_FruitController->Init(m_EntityManager.get(), fruitTextures, superFruitTextures);
 
     // Player
     m_PlayerController = std::make_unique<PlayerController>();
@@ -186,7 +187,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
-        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
@@ -212,7 +213,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
-        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
     }
@@ -222,7 +223,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_firstPauseLoad = false;
         }
         m_PauseMenu->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
-        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode);
+        m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         if (m_CurrentGameState->m_CurrentState != Engine::GameStates::PauseMenu) {
             m_PauseMenu->Destroy(m_EntityManager.get());
             m_firstPauseLoad = true;
