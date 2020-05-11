@@ -118,7 +118,7 @@ namespace Game
                 // Collision with Bumpers
                 if (entityCollided->HasComponent<BumperComponent>())
                 {
-                    m_inputDelay = 2;
+                    m_inputDelay = 1;
 
                     //if bumpers are death reset snake
                     if (gameModeSettings->areBumpersDeath) {
