@@ -18,5 +18,6 @@ namespace Game {
 		int m_superChange;
 		std::vector<Engine::Texture*> m_textures;	
 		std::vector<Engine::Texture*> m_superTextures;
+		bool m_notCollided;
 	};
 }
