@@ -101,6 +101,14 @@ namespace Game
 
     };
 
+    struct EndGameComponent : public Engine::Component {
+
+    };
+
+    struct EndGameSelectionComponent : public Engine::Component {
+
+    };
+
     struct GridComponent : public Engine::Component
     {
 

@@ -42,7 +42,7 @@ namespace Game
         return true;
     }
 
-    void ResumeScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode)
+    void ResumeScreen::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_, Engine::CurrentGameState* gameState, Engine::GameStates gameMode, int level)
     {
         time_passed += dt;
         auto resumeComponents = entityManager_->GetAllEntitiesWithComponents<ResumeScreenComponent, Engine::TransformComponent>();
@@ -51,7 +51,25 @@ namespace Game
             gameState->m_CurrentState = gameMode;
             if (soundManager_->ResumeMusic() != 1)
             {
-                soundManager_->PlayMusic("play_music", -1);
+                if (gameMode == Engine::GameStates::PlayingInfiniteLevel) {
+                    soundManager_->PlayMusic("play_music", -1);
+                }
+                else {
+                    switch (level) {
+                    case 1:
+                        soundManager_->PlayMusic("level_1", -1);
+                        break;
+                    case 2:
+                        soundManager_->PlayMusic("level_2", -1);
+                        break;
+                    case 3:
+                        soundManager_->PlayMusic("level_3", -1);
+                        break;
+                    default:
+                        soundManager_->PlayMusic("play_music", -1);
+                        break;
+                    }
+                }
             }
         }
         for (auto& entity : resumeComponents)

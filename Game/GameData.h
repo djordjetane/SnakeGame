@@ -6,7 +6,7 @@ constexpr float SNAKE_PART_SIZE = 38.f;
 constexpr int MAX_SNAKE_LENGTH = 100;
 constexpr int START_SNAKE_LENGTH = 3;
 
-constexpr float START1_SNAKE_POS_X = -420.f;
+constexpr float START1_SNAKE_POS_X = -540.f;
 constexpr float START1_SNAKE_POS_Y = 20.f;
 
 constexpr int START_SNAKE_SPEED = 8;

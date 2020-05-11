@@ -103,6 +103,10 @@ bool Game::GameApp::GameSpecificInit()
 
     m_SoundManager->CreateMusic("main_menu_music", "..\\Data\\Sounds\\menu_music.mp3");
     m_SoundManager->CreateMusic("play_music", "..\\Data\\Sounds\\play_music.mp3");
+    m_SoundManager->CreateMusic("level_1", "..\\Data\\Sounds\\level_1.wav");
+    m_SoundManager->CreateMusic("level_2", "..\\Data\\Sounds\\level_2.wav");
+    m_SoundManager->CreateMusic("level_3", "..\\Data\\Sounds\\level_3.wav");
+    m_SoundManager->CreateMusic("congratulations", "..\\Data\\Sounds\\congratulations.wav");
     m_SoundManager->CreateMusic("victory", "..\\Data\\Sounds\\victory.ogg");
 
     std::vector<Engine::Texture*> fruitTextures{};
@@ -160,6 +164,10 @@ bool Game::GameApp::GameSpecificInit()
     m_VictoryScreen = std::make_unique<VictoryScreen>();
     m_VictoryScreen->Init(m_EntityManager.get(), m_TextureManager.get());    
 
+    //End Screen
+    m_EndGameScreen = std::make_unique<EndGameScreen>();
+    m_EndGameScreen->Init(m_EntityManager.get(), m_TextureManager.get());
+
     m_SoundManager->PlayMusic("main_menu_music", -1);
     return true;
 }
@@ -205,6 +213,12 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             if (m_level < 4) {
                 m_level++;
             }
+            else {
+                m_level = 1;
+                m_SoundManager.get()->StopMusic();
+                m_SoundManager.get()->PlayMusic("congratulations", -1);
+                m_CurrentGameState->m_CurrentState = Engine::GameStates::EndGameScreen;
+            }
         }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingInfiniteLevel) {
@@ -217,6 +231,10 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
+        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
+            m_ScoreController->RestartScore();
+            m_firstLoad = true;
+        }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
         if (m_firstPauseLoad) {
@@ -242,7 +260,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_firstResumeLoad = false;
         }
         
-        m_ResumeScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
+        m_ResumeScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode, m_level);
 
         if (m_CurrentGameState->m_CurrentState != Engine::GameStates::ResumingLevel) {
             m_ResumeScreen->Destroy(m_EntityManager.get());
@@ -272,6 +290,17 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
+            m_SoundManager->PlayMusic("main_menu_music", -1);
+        }
+    }
+    else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::EndGameScreen) {
+        
+        m_EndGameScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
+        if (m_CurrentGameState->m_CurrentState != Engine::GameStates::EndGameScreen) {
+            m_SoundManager.get()->StopMusic();
+        }
+        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
+            m_SoundManager->PlayMusic("main_menu_music", -1);
         }
     }
     else {

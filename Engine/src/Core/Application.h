@@ -28,6 +28,7 @@ namespace Engine {
         LevelWon,
         LevelLost,
         PauseMenu,
+        EndGameScreen,
         QuitGame
     };
 
