@@ -198,6 +198,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
 
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
+        m_ScoreController->Update(dt);
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
 
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
@@ -235,6 +236,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
 
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
+        m_ScoreController->Update(dt);
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
 
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
@@ -320,8 +322,6 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     else {
         m_MainMenu->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
     }
-
-    m_ScoreController->Update(dt);
 }
 
 bool Game::GameApp::GameSpecificShutdown()
