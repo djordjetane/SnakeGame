@@ -43,6 +43,7 @@ namespace Engine
         m_Texture = SDL_CreateTextureFromSurface(renderer_->GetNativeRenderer(), surfaceMessage);
 
         SDL_FreeSurface(surfaceMessage);
+        TTF_CloseFont(font);
 
         return true;
     }
