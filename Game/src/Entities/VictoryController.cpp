@@ -10,7 +10,7 @@ namespace Game
 
 
         auto youWin = std::make_unique<Engine::Entity>();
-        youWin->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1300.f, 740.f);
+        youWin->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1280.f, 720.f);
         youWin->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("win_screen");
         youWin->AddComponent<WinScreenComponent>();
         entityManager_->AddEntity(std::move(youWin));
