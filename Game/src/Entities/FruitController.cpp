@@ -46,7 +46,7 @@ namespace Game {
 
 		fruit->AddComponent<FruitComponent>();
 		auto [x, y] = GetRandomPosition();		
-		fruit->AddComponent<Engine::CollisionComponent>(40.f, 40.f);
+		fruit->AddComponent<Engine::CollisionComponent>(38.f, 38.f);
 		fruit->AddComponent<Engine::SpriteComponent>().m_Image = m_textures[rand() % m_textures.size()];		
 		fruit->AddComponent<Engine::TransformComponent>(x, y, 40.f, 40.f);						
 		entityManager_->AddEntity(std::move(fruit));
@@ -66,7 +66,7 @@ namespace Game {
 		auto superFruit = std::make_unique<Engine::Entity>();
 		superFruit->AddComponent<SuperFruitComponent>();
 		superFruit->AddComponent<Engine::TransformComponent>(9000.f, 9000.f, 60.f, 60.f);
-		superFruit->AddComponent<Engine::CollisionComponent>(60.f, 60.f);
+		superFruit->AddComponent<Engine::CollisionComponent>(58.f, 58.f);
 		superFruit->AddComponent<Engine::SpriteComponent>().m_Image = m_superTextures[rand() % m_superTextures.size()];
 		
 		entityManager_->AddEntity(std::move(superFruit));

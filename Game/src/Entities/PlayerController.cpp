@@ -118,7 +118,7 @@ namespace Game
                 // Collision with Bumpers
                 if (entityCollided->HasComponent<BumperComponent>())
                 {
-                    m_inputDelay = 2;
+                    m_inputDelay = 1;
 
                     //if bumpers are death reset snake
                     if (gameModeSettings->areBumpersDeath) {
@@ -145,6 +145,7 @@ namespace Game
 
                         // Coordinates of snake head
                         float x, y;
+                        bool collidedWithBumper = false;                                     
 
                         switch (direction)
                         {
@@ -161,8 +162,22 @@ namespace Game
                                         direction = EHeadDirection::Up;
                                     else
                                         direction = EHeadDirection::Down;
+
+                                    collidedWithBumper = true;
                                 }
                             }
+
+                            if(!collidedWithBumper)
+                            {                                                                          
+                                if(Engine::CheckForCollision(helpEntity, bodyEntities[1]))
+                                {
+                                    if (direction == EHeadDirection::Down)
+                                        direction = EHeadDirection::Up;
+                                    else
+                                        direction = EHeadDirection::Down;
+                                }                              
+                            }
+
                             break;
 
                         case EHeadDirection::Right:
@@ -179,8 +194,22 @@ namespace Game
                                         direction = EHeadDirection::Up;
                                     else
                                         direction = EHeadDirection::Down;
+
+                                    collidedWithBumper = true;
                                 }
                             }
+
+                            if (!collidedWithBumper)
+                            {
+                                if (Engine::CheckForCollision(helpEntity, bodyEntities[1]))
+                                {
+                                    if (direction == EHeadDirection::Down)
+                                        direction = EHeadDirection::Up;
+                                    else
+                                        direction = EHeadDirection::Down;
+                                }
+                            }
+
                             break;
 
                         case EHeadDirection::Up:
@@ -197,8 +226,22 @@ namespace Game
                                         direction = EHeadDirection::Right;
                                     else
                                         direction = EHeadDirection::Left;
+
+                                    collidedWithBumper = true;
                                 }
                             }
+
+                            if (!collidedWithBumper)
+                            {
+                                if (Engine::CheckForCollision(helpEntity, bodyEntities[1]))
+                                {
+                                    if (direction == EHeadDirection::Left)
+                                        direction = EHeadDirection::Right;
+                                    else
+                                        direction = EHeadDirection::Left;
+                                }
+                            }
+
                             break;
 
                         case EHeadDirection::Down:
@@ -215,8 +258,22 @@ namespace Game
                                         direction = EHeadDirection::Right;
                                     else
                                         direction = EHeadDirection::Left;
+
+                                    collidedWithBumper = true;
                                 }
                             }
+
+                            if (!collidedWithBumper)
+                            {
+                                if (Engine::CheckForCollision(helpEntity, bodyEntities[1]))
+                                {
+                                    if (direction == EHeadDirection::Left)
+                                        direction = EHeadDirection::Right;
+                                    else
+                                        direction = EHeadDirection::Left;
+                                }
+                            }
+
                             break;
 
                         default:
