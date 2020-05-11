@@ -59,6 +59,8 @@ namespace Game {
 			auto [x, y] = GetRandomPosition();
 			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.x = x;
 			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.y = y;
+
+			m_FruitPosition = {x, y};
 		}
 
 		auto superFruit = std::make_unique<Engine::Entity>();
@@ -123,7 +125,13 @@ namespace Game {
 		if (!superFruit->GetComponent<SuperFruitComponent>()->m_shown && m_superChange > 360)
 		{						
 			m_superChange = 0;
-			auto [x, y] = GetRandomPosition();
+			auto x = m_FruitPosition.x;
+			auto y = m_FruitPosition.y;
+
+			while(x == m_FruitPosition.x && y == m_FruitPosition.y)
+			{
+				std::tie(x, y) = GetRandomPosition();
+			}
 			
 			auto transformator = superFruit->GetComponent<Engine::TransformComponent>();
 			transformator->m_Position.x = x+10.f;
