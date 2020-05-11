@@ -15,7 +15,7 @@ namespace Game
         entityManager_->AddEntity(std::move(background));
 
         auto selectionSquare = std::make_unique<Engine::Entity>();
-        selectionSquare->AddComponent<Engine::TransformComponent>(0.f, -100.f, 290.f, 80.f);
+        selectionSquare->AddComponent<Engine::TransformComponent>(0.f, -100.f, 295.f, 80.f);
         selectionSquare->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("white");
         selectionSquare->AddComponent<Engine::InputComponent>();
         selectionSquare->AddComponent<SelectionComponent>();

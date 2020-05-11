@@ -103,6 +103,9 @@ bool Game::GameApp::GameSpecificInit()
 
     m_SoundManager->CreateMusic("main_menu_music", "..\\Data\\Sounds\\menu_music.mp3");
     m_SoundManager->CreateMusic("play_music", "..\\Data\\Sounds\\play_music.mp3");
+    m_SoundManager->CreateMusic("level_1", "..\\Data\\Sounds\\level_1.wav");
+    m_SoundManager->CreateMusic("level_2", "..\\Data\\Sounds\\level_2.wav");
+    m_SoundManager->CreateMusic("level_3", "..\\Data\\Sounds\\level_3.wav");
     m_SoundManager->CreateMusic("victory", "..\\Data\\Sounds\\victory.ogg");
 
     std::vector<Engine::Texture*> fruitTextures{};
@@ -217,6 +220,10 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
+        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
+            m_ScoreController->RestartScore();
+            m_firstLoad = true;
+        }
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PauseMenu) {
         if (m_firstPauseLoad) {
@@ -242,7 +249,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_firstResumeLoad = false;
         }
         
-        m_ResumeScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
+        m_ResumeScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode, m_level);
 
         if (m_CurrentGameState->m_CurrentState != Engine::GameStates::ResumingLevel) {
             m_ResumeScreen->Destroy(m_EntityManager.get());
