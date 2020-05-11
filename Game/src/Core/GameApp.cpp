@@ -214,7 +214,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             
             m_firstLoad = true;
 
-            if (m_level < 4) {
+            if (m_level < 3) {
                 m_level++;
                 m_SoundManager.get()->PlayMusic("victory", 1);
             }
@@ -311,6 +311,9 @@ void Game::GameApp::GameSpecificUpdate(float dt)
 
         if (m_CurrentGameState->m_CurrentState != Engine::GameStates::EndGameScreen) {
             m_SoundManager.get()->StopMusic();
+        }
+
+        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_SoundManager->PlayMusic("main_menu_music", -1);
         }
     }
