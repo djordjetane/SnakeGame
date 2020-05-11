@@ -195,27 +195,31 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
+
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
+
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
             m_ScoreController->RestartScore();
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
         }
+
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelWon) {
             m_Stadium->Destroy(m_EntityManager.get());
             m_ScoreController->RestartScore();
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_SoundManager.get()->StopMusic();
-            m_SoundManager.get()->PlayMusic("victory", 1);
+            
             m_firstLoad = true;
+
             if (m_level < 4) {
                 m_level++;
+                m_SoundManager.get()->PlayMusic("victory", 1);
             }
             else {
                 m_level = 1;
-                m_SoundManager.get()->StopMusic();
                 m_SoundManager.get()->PlayMusic("congratulations", -1);
                 m_CurrentGameState->m_CurrentState = Engine::GameStates::EndGameScreen;
             }
@@ -228,9 +232,11 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
         }
+
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
         m_FruitController->Update(dt, m_EntityManager.get(), m_SoundManager.get());
         m_CameraController->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
+
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
             m_ScoreController->RestartScore();
             m_firstLoad = true;
@@ -241,12 +247,15 @@ void Game::GameApp::GameSpecificUpdate(float dt)
             m_PauseMenu->Init(m_EntityManager.get(), m_TextureManager.get());
             m_firstPauseLoad = false;
         }
+
         m_PauseMenu->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
         m_PlayerController->Update(dt, m_EntityManager.get(), m_GameModeSettings.get(), m_CurrentGameState.get(), m_GameMode, m_SoundManager.get());
+        
         if (m_CurrentGameState->m_CurrentState != Engine::GameStates::PauseMenu) {
             m_PauseMenu->Destroy(m_EntityManager.get());
             m_firstPauseLoad = true;
         }
+
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_ScoreController->RestartScore();
             m_PlayerController->ResetSnake(m_EntityManager.get());
@@ -273,6 +282,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
         m_ScoreController->RestartScore();
         m_DeathScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
+
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {            
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());
@@ -282,9 +292,11 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelWon) {
         
         m_VictoryScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
+
         if (m_CurrentGameState->m_CurrentState != Engine::GameStates::LevelWon) {
             m_SoundManager.get()->StopMusic();
         }
+
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_ScoreController->RestartScore();
             m_PlayerController->ResetSnake(m_EntityManager.get());
@@ -296,10 +308,9 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::EndGameScreen) {
         
         m_EndGameScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get());
+
         if (m_CurrentGameState->m_CurrentState != Engine::GameStates::EndGameScreen) {
             m_SoundManager.get()->StopMusic();
-        }
-        if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_SoundManager->PlayMusic("main_menu_music", -1);
         }
     }
