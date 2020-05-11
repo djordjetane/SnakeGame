@@ -24,7 +24,7 @@ bool Game::GameApp::GameSpecificInit()
     m_CameraController = std::make_unique<CameraController>();
     m_CameraController->Init(m_EntityManager.get());
 
-    srand(NULL);
+    srand(time(NULL));
 
     // TestImage
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "grass", "..\\Data\\grass_1.png");

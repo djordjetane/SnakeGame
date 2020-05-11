@@ -10,6 +10,7 @@
 #include <array>
 #include <vector>
 #include <set>
+#include <ctime>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
