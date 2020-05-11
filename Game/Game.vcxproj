@@ -162,6 +162,7 @@
     <ClInclude Include="src\Entities.h" />
     <ClInclude Include="src\Entities\CameraController.h" />
     <ClInclude Include="src\Entities\DeathScreenController.h" />
+    <ClInclude Include="src\Entities\EndGameController.h" />
     <ClInclude Include="src\Entities\FruitController.h" />
     <ClInclude Include="src\Entities\GameComponents.h" />
     <ClInclude Include="src\Entities\GameModeController.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\Core\GameApp.cpp" />
     <ClCompile Include="src\Entities\CameraController.cpp" />
     <ClCompile Include="src\Entities\DeathScreenController.cpp" />
+    <ClCompile Include="src\Entities\EndGameController.cpp" />
     <ClCompile Include="src\Entities\FruitController.cpp" />
     <ClCompile Include="src\Entities\GameModeController.cpp" />
     <ClCompile Include="src\Entities\MenuController.cpp" />

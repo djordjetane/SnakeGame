@@ -33,6 +33,7 @@ namespace Game
         std::unique_ptr<DeathScreen> m_DeathScreen{};
         std::unique_ptr<VictoryScreen> m_VictoryScreen{};
         std::unique_ptr<ScoreController> m_ScoreController{};
+        std::unique_ptr<EndGameScreen> m_EndGameScreen{};
     };
 
 }

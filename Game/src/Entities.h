@@ -12,3 +12,4 @@
 #include "Entities\DeathScreenController.h"
 #include "Entities\VictoryController.h"
 #include "Entities\ScoreController.h"
+#include "Entities\EndGameController.h"

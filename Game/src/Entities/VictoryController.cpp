@@ -78,7 +78,6 @@ namespace Game
                 }
                 else if (transform->m_Position.x == 200.f) {
                     gameState->m_CurrentState = Engine::GameStates::MainMenu;
-                    soundManager_->PlayMusic("main_menu_music", -1);
                     soundManager_->PlaySound("select", 0);
                 }
             }
