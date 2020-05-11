@@ -9,7 +9,7 @@ namespace Game
         ASSERT(entityManager_ != nullptr, "Must pass valid pointer to entitymanager to Menu::Init()");
 
         auto background = std::make_unique<Engine::Entity>();
-        background->AddComponent<Engine::TransformComponent>(0.f, 0.f, 1280.f, 740.f);
+        background->AddComponent<Engine::TransformComponent>(0.f, 0.f, 1280.f, 720.f);
         background->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("main menu");
         background->AddComponent<MainMenuComponent>();
         entityManager_->AddEntity(std::move(background));

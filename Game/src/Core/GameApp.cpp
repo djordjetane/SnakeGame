@@ -66,6 +66,7 @@ bool Game::GameApp::GameSpecificInit()
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "win_screen", "..\\Data\\win_screen.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "next_level", "..\\Data\\next_level.png");
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall", "..\\Data\\wall.png");
+    m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "congratulations", "..\\Data\\congratulations.png");
 
     // Wall Textures
     m_TextureManager->CreateTexture(m_RenderSystem->GetRenderer(), "wall_240x80", "..\\Data\\walls\\wall_240x80.png");

@@ -10,8 +10,8 @@ namespace Game
 
 
         auto congratulations = std::make_unique<Engine::Entity>();
-        congratulations->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1300.f, 740.f);
-        congratulations->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("black");
+        congratulations->AddComponent<Engine::TransformComponent>(0.f, 9000.f, 1280.f, 720.f);
+        congratulations->AddComponent<Engine::SpriteComponent>().m_Image = textureManager_->GetTexture("congratulations");
         congratulations->AddComponent<EndGameComponent>();
         entityManager_->AddEntity(std::move(congratulations));
 
