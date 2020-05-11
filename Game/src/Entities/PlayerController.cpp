@@ -145,7 +145,7 @@ namespace Game
 
                         // Coordinates of snake head
                         float x, y;
-                        bool collidedWithBumper = false;
+                        bool collidedWithBumper = false;                                     
 
                         switch (direction)
                         {
@@ -168,17 +168,14 @@ namespace Game
                             }
 
                             if(!collidedWithBumper)
-                            {
-                                for(auto& bodyEntity : bodyEntities)
+                            {                                                                          
+                                if(Engine::CheckForCollision(helpEntity, bodyEntities[1]))
                                 {
-                                    if(Engine::CheckForCollision(helpEntity, bodyEntity))
-                                    {
-                                        if (direction == EHeadDirection::Down)
-                                            direction = EHeadDirection::Up;
-                                        else
-                                            direction = EHeadDirection::Down;
-                                    }
-                                }
+                                    if (direction == EHeadDirection::Down)
+                                        direction = EHeadDirection::Up;
+                                    else
+                                        direction = EHeadDirection::Down;
+                                }                              
                             }
 
                             break;
@@ -202,17 +199,14 @@ namespace Game
                                 }
                             }
 
-                            if(!collidedWithBumper)
+                            if (!collidedWithBumper)
                             {
-                                for(auto& bodyEntity : bodyEntities)
+                                if (Engine::CheckForCollision(helpEntity, bodyEntities[1]))
                                 {
-                                    if(Engine::CheckForCollision(helpEntity, bodyEntity))
-                                    {
-                                        if (direction == EHeadDirection::Down)
-                                            direction = EHeadDirection::Up;
-                                        else
-                                            direction = EHeadDirection::Down;
-                                    }
+                                    if (direction == EHeadDirection::Down)
+                                        direction = EHeadDirection::Up;
+                                    else
+                                        direction = EHeadDirection::Down;
                                 }
                             }
 
@@ -237,17 +231,14 @@ namespace Game
                                 }
                             }
 
-                            if(!collidedWithBumper)
+                            if (!collidedWithBumper)
                             {
-                                for(auto& bodyEntity : bodyEntities)
+                                if (Engine::CheckForCollision(helpEntity, bodyEntities[1]))
                                 {
-                                    if(Engine::CheckForCollision(helpEntity, bodyEntity))
-                                    {
-                                        if (direction == EHeadDirection::Left)
+                                    if (direction == EHeadDirection::Left)
                                         direction = EHeadDirection::Right;
                                     else
                                         direction = EHeadDirection::Left;
-                                    }
                                 }
                             }
 
@@ -272,17 +263,14 @@ namespace Game
                                 }
                             }
 
-                            if(!collidedWithBumper)
+                            if (!collidedWithBumper)
                             {
-                                for(auto& bodyEntity : bodyEntities)
+                                if (Engine::CheckForCollision(helpEntity, bodyEntities[1]))
                                 {
-                                    if(Engine::CheckForCollision(helpEntity, bodyEntity))
-                                    {
-                                        if (direction == EHeadDirection::Left)
-                                            direction = EHeadDirection::Right;
-                                        else
-                                            direction = EHeadDirection::Left;
-                                    }
+                                    if (direction == EHeadDirection::Left)
+                                        direction = EHeadDirection::Right;
+                                    else
+                                        direction = EHeadDirection::Left;
                                 }
                             }
 
