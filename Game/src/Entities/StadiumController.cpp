@@ -36,48 +36,48 @@ namespace Game
         // C Up horizontal
         bumper = std::make_unique<Engine::Entity>();
         bumper->AddComponent<BumperComponent>();
-        bumper->AddComponent<Engine::TransformComponent>(-300.f, -150.f, 200.f, 100.f);
-        bumper->AddComponent<Engine::CollisionComponent>(200.f, 100.f);
-        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_200x100");
+        bumper->AddComponent<Engine::TransformComponent>(-300.f, -160.f, 200.f, 80.f);
+        bumper->AddComponent<Engine::CollisionComponent>(200.f, 80.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_200x80");
         entityManager_->AddEntity(std::move(bumper));
         // C Down horizontal
         bumper = std::make_unique<Engine::Entity>();
         bumper->AddComponent<BumperComponent>();
-        bumper->AddComponent<Engine::TransformComponent>(-300.f, 150.f, 200.f, 100.f);
-        bumper->AddComponent<Engine::CollisionComponent>(200.f, 100.f);
-        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_200x100");
+        bumper->AddComponent<Engine::TransformComponent>(-300.f, 160.f, 200.f, 80.f);
+        bumper->AddComponent<Engine::CollisionComponent>(200.f, 80.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_200x80");
         entityManager_->AddEntity(std::move(bumper));
 
         // First plus
         // horizontal
         bumper = std::make_unique<Engine::Entity>();
         bumper->AddComponent<BumperComponent>();
-        bumper->AddComponent<Engine::TransformComponent>(0.f, 0.f, 80.f, 200.f);
-        bumper->AddComponent<Engine::CollisionComponent>(80.f, 200.f);
-        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_80x200");
+        bumper->AddComponent<Engine::TransformComponent>(0.f, 0.f, 80.f, 240.f);
+        bumper->AddComponent<Engine::CollisionComponent>(80.f, 240.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_80x240");
         entityManager_->AddEntity(std::move(bumper));
         // vertical
         bumper = std::make_unique<Engine::Entity>();
         bumper->AddComponent<BumperComponent>();
-        bumper->AddComponent<Engine::TransformComponent>(0.f, 0.f, 200.f, 80.f);
-        bumper->AddComponent<Engine::CollisionComponent>(200.f, 80.f);
-        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_200x80");
+        bumper->AddComponent<Engine::TransformComponent>(0.f, 0.f, 240.f, 80.f);
+        bumper->AddComponent<Engine::CollisionComponent>(240.f, 80.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_240x80");
         entityManager_->AddEntity(std::move(bumper));
 
         // Second plus
         // horizontal
         bumper = std::make_unique<Engine::Entity>();
         bumper->AddComponent<BumperComponent>();
-        bumper->AddComponent<Engine::TransformComponent>(300.f, 0.f, 80.f, 200.f);
-        bumper->AddComponent<Engine::CollisionComponent>(80.f, 200.f);
-        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_80x200");
+        bumper->AddComponent<Engine::TransformComponent>(320.f, 0.f, 80.f, 240.f);
+        bumper->AddComponent<Engine::CollisionComponent>(80.f, 240.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_80x240");
         entityManager_->AddEntity(std::move(bumper));
         // vertical
         bumper = std::make_unique<Engine::Entity>();
         bumper->AddComponent<BumperComponent>();
-        bumper->AddComponent<Engine::TransformComponent>(300.f, 0.f, 200.f, 80.f);
-        bumper->AddComponent<Engine::CollisionComponent>(200.f, 80.f);
-        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_200x80");
+        bumper->AddComponent<Engine::TransformComponent>(320.f, 0.f, 240.f, 80.f);
+        bumper->AddComponent<Engine::CollisionComponent>(240.f, 80.f);
+        bumper->AddComponent<Engine::SpriteComponent>().m_Image = m_TextureManager->GetTexture("wall_240x80");
         entityManager_->AddEntity(std::move(bumper));
 
         return true;
