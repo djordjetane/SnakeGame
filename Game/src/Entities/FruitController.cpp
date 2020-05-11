@@ -50,18 +50,8 @@ namespace Game {
 		fruit->AddComponent<Engine::SpriteComponent>().m_Image = m_textures[rand() % m_textures.size()];		
 		fruit->AddComponent<Engine::TransformComponent>(x, y, 40.f, 40.f);						
 		entityManager_->AddEntity(std::move(fruit));
-
-		auto fruitControl = entityManager_->GetAllEntitiesWithComponent<FruitComponent>()[0];
-		auto collider = fruitControl->GetComponent<Engine::CollisionComponent>();
-
-		while (collider->m_CollidedWith.size() != 0)
-		{
-			auto [x, y] = GetRandomPosition();
-			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.x = x;
-			fruitControl->GetComponent<Engine::TransformComponent>()->m_Position.y = y;
-
-			m_FruitPosition = {x, y};
-		}
+		
+		Restart(entityManager_);						
 
 		auto superFruit = std::make_unique<Engine::Entity>();
 		superFruit->AddComponent<SuperFruitComponent>();
@@ -71,7 +61,7 @@ namespace Game {
 		
 		entityManager_->AddEntity(std::move(superFruit));
 		
-		m_superChange = 0;
+		
 
 		return true;
 	}
@@ -82,62 +72,69 @@ namespace Game {
 	void FruitController::Update(float dt, Engine::EntityManager* entityManager_, Engine::SoundManager* soundManager_)
 	{
 
-		LOG_INFO("Current time: " + std::to_string(dt));
+		// LOG_INFO("Current time: " + std::to_string(dt));
 
-		auto fruits = entityManager_->GetAllEntitiesWithComponent<FruitComponent>();		
+		auto fruit = entityManager_->GetAllEntitiesWithComponent<FruitComponent>()[0]; // Limited to only one, no need to use vector
+		auto sprite = fruit->GetComponent<Engine::SpriteComponent>();		
+			
+		auto collider = fruit->GetComponent<Engine::CollisionComponent>();
 
-		for (auto& fruit : fruits)
+		if(collider->m_CollidedWith.size() > 0)			
+			sprite->m_Active = false;		
+		else
+			sprite->m_Active = true;
+
+
+		for (const auto& entity : collider->m_CollidedWith)
 		{			
-			auto collider = fruit->GetComponent<Engine::CollisionComponent>();
+			if (entity->HasComponent<HeadComponent>())
+			{					
+				entity->GetComponent<HeadComponent>()->m_HasEatenFruit = true;
+				auto [x, y] = GetRandomPosition();
+				auto transform = fruit->GetComponent<Engine::TransformComponent>();
+				transform->m_Position.x = x;
+				transform->m_Position.y = y;
+				fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
 
-			for (const auto& entity : collider->m_CollidedWith)
+				auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
+				scoreEntity->GetComponent<ScoreComponent>()->m_Score++;
+				soundManager_->PlaySound("eat", 0);
+			}
+
+			if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>() || entity->HasComponent<SuperFruitComponent>())
 			{
-				if (entity->HasComponent<HeadComponent>())
-				{					
-					entity->GetComponent<HeadComponent>()->m_HasEatenFruit = true;
-					auto [x, y] = GetRandomPosition();
-					auto transform = fruit->GetComponent<Engine::TransformComponent>();
-					transform->m_Position.x = x;
-					transform->m_Position.y = y;
-					fruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_textures[rand() % m_textures.size()];
-
-					auto scoreEntity = entityManager_->GetAllEntitiesWithComponent<ScoreComponent>()[0];
-					scoreEntity->GetComponent<ScoreComponent>()->m_Score++;
-					soundManager_->PlaySound("eat", 0);
-				}
-
-				if (entity->HasComponent<BumperComponent>() || entity->HasComponent<BodyComponent>() || entity->HasComponent<SuperFruitComponent>())
-				{
-					auto [x, y] = GetRandomPosition();
-					auto transform = fruit->GetComponent<Engine::TransformComponent>();
-					transform->m_Position.x = x;
-					transform->m_Position.y = y;
-				}
-			}					
-		}		
+				auto [x, y] = GetRandomPosition();
+				auto transform = fruit->GetComponent<Engine::TransformComponent>();
+				transform->m_Position.x = x;
+				transform->m_Position.y = y;
+			}
+		}							
 
 
 		// ****************
 		// * SuperFruit *
 		// ****************
-		auto superFruit = entityManager_->GetAllEntitiesWithComponent<SuperFruitComponent>().at(0); // Limited to only one at time
+		auto superFruit = entityManager_->GetAllEntitiesWithComponent<SuperFruitComponent>()[0]; // Limited to only one at time
 		
 		if (!superFruit->GetComponent<SuperFruitComponent>()->m_shown && m_superChange > 360)
 		{						
-			m_superChange = 0;
-			auto x = m_FruitPosition.x;
-			auto y = m_FruitPosition.y;
+			m_superChange = 0;			
 
-			while(x == m_FruitPosition.x && y == m_FruitPosition.y)
-			{
-				std::tie(x, y) = GetRandomPosition();
-			}
-			
+			auto superSprite = superFruit->GetComponent<Engine::SpriteComponent>();
+			superSprite->m_Active = false;
+
+			auto [x, y] = GetRandomPosition();
 			auto transformator = superFruit->GetComponent<Engine::TransformComponent>();
 			transformator->m_Position.x = x+10.f;
-			transformator->m_Position.y = y+10.f;
+			transformator->m_Position.y = y+10.f;			
 
-			superFruit->GetComponent<Engine::SpriteComponent>()->m_Image = m_superTextures[rand() % m_superTextures.size()];
+			while(Engine::CheckForCollision(fruit, superFruit))
+			{
+				std::tie(transformator->m_Position.x, transformator->m_Position.y) = GetRandomPosition();
+			}
+
+			superSprite->m_Image = m_superTextures[rand() % m_superTextures.size()];
+			superSprite->m_Active = true;
 
 			superFruit->GetComponent<SuperFruitComponent>()->m_shown = true;
 		}		
@@ -147,6 +144,12 @@ namespace Game {
 
 			// SuperFruit Collision
 			auto collider = superFruit->GetComponent<Engine::CollisionComponent>();
+			auto superSprite = superFruit->GetComponent<Engine::SpriteComponent>();
+
+			if(collider->m_CollidedWith.size() > 0)
+				superSprite->m_Active = false;
+			else
+				superSprite->m_Active = true;
 
 			for (const auto& entity : collider->m_CollidedWith)
 			{
@@ -182,6 +185,26 @@ namespace Game {
 		}
 		
 		m_superChange++;
+	}
+
+	inline void FruitController::Restart(Engine::EntityManager* entityManager_)
+	{
+		auto fruitControl = entityManager_->GetAllEntitiesWithComponent<FruitComponent>()[0];
+		auto transform = fruitControl->GetComponent<Engine::TransformComponent>();
+		auto collisionEntities = entityManager_->GetAllEntitiesWithComponents<HeadComponent, BodyComponent, BumperComponent>();
+
+		int n = collisionEntities.size();
+
+		for(int i = 0; i < n; i++)
+		{
+			while(Engine::CheckForCollision(fruitControl, collisionEntities[i]))
+			{
+				i = 0;
+				std::tie(transform->m_Position.x, transform->m_Position.y) = GetRandomPosition();
+			}
+		}
+
+		m_superChange = 0;
 	}
 
 } // Game

@@ -178,6 +178,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingLevel) {
         if (m_firstLoad) {
             m_ScoreController->RestartScore();
+            m_FruitController->Restart(m_EntityManager.get());
             switch (m_level) {
             case 1:
                 m_Stadium->InitLvl1(m_EntityManager.get());
@@ -204,6 +205,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
 
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
             m_ScoreController->RestartScore();
+            m_FruitController->Restart(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
         }
@@ -211,6 +213,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelWon) {
             m_Stadium->Destroy(m_EntityManager.get());
             m_ScoreController->RestartScore();
+            m_FruitController->Restart(m_EntityManager.get());
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_SoundManager.get()->StopMusic();
             
@@ -230,6 +233,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::PlayingInfiniteLevel) {
         if (m_firstLoad) {
             m_ScoreController->RestartScore();
+            m_FruitController->Restart(m_EntityManager.get());
             m_GameMode = Engine::GameStates::PlayingInfiniteLevel;
             m_CurrentGameState->m_CurrentState = Engine::GameStates::ResumingLevel;
             m_firstLoad = false;
@@ -242,6 +246,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
 
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
             m_ScoreController->RestartScore();
+            m_FruitController->Restart(m_EntityManager.get());
             m_firstLoad = true;
         }
     }
@@ -261,6 +266,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
 
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_ScoreController->RestartScore();
+            m_FruitController->Restart(m_EntityManager.get());
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
@@ -284,6 +290,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
     }
     else if (m_CurrentGameState->m_CurrentState == Engine::GameStates::LevelLost) {
         m_ScoreController->RestartScore();
+        m_FruitController->Restart(m_EntityManager.get());
         m_DeathScreen->Update(dt, m_EntityManager.get(), m_SoundManager.get(), m_CurrentGameState.get(), m_GameMode);
 
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {            
@@ -302,6 +309,7 @@ void Game::GameApp::GameSpecificUpdate(float dt)
 
         if (m_CurrentGameState->m_CurrentState == Engine::GameStates::MainMenu) {
             m_ScoreController->RestartScore();
+            m_FruitController->Restart(m_EntityManager.get());
             m_PlayerController->ResetSnake(m_EntityManager.get());
             m_Stadium->Destroy(m_EntityManager.get());
             m_firstLoad = true;
